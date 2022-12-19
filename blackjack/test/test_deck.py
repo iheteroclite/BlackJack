@@ -12,7 +12,8 @@ class DeckTestCase(unittest.TestCase):
 
     def test_number_of_cards(self):  # any method beginning with 'test' will be run by unittest
         number_of_cards = len(self.deck.cards)
-        self.assertEqual(number_of_cards, 52)
+        # check there's up to 8 decks in the deck :)
+        self.assertTrue(number_of_cards in [52*n for n in range(8)])
 
 
 if __name__ == '__main__':
