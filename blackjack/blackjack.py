@@ -5,12 +5,12 @@ from src.hand import Hand
 
 
 def play():
-    # setup number of players and decks
+    # Setup number of players and decks
     chose = player_choice(False, "players", [n+1 for n in range(5)])
     num_players = chose['choice']
     print('number of players selected was:', num_players)
 
-    # make a deck
+    # Make a deck
     # min cards ensures there's at least 1 deck per 4 players
     min_decks = 2 if num_players > 4 else 1
     chose = player_choice(False, "decks", [n+min_decks for n in range(8)])
@@ -18,14 +18,14 @@ def play():
     print('number of decks selected was:', num_decks)
     deck = Deck(num_decks)
 
-    # start game by making everyone's hand
+    # Start game by making everyone's hand
     dealer_hand = Hand(deck, 'Dealer', 'dealer')
     player_hands = [Hand(deck, f'Player {x + 1}', 'player')
         for x in range(num_players)]
     player_hands.append(dealer_hand)
 
 
-    # players' turns
+    # Players' turns
     for hand in player_hands:
         # alert which player's turn
         # TODO: take player input/consent before displaying cards
@@ -65,10 +65,36 @@ def play():
                     break
                 elif player_move == 'surrender':
                     hand.state = player_move
+                # TODO: could add 'split', I'll need a player class
             else:
                 break
 
-        # OR make sure there are enough decks for the players
+    dealers_score = dealer_hand.state
+    print(f"The dealer's score is: {dealers_score}")
+
+    # Final score
+    for hand in player_hands[:-1]:  #bust, a total, blackjack, surrender
+        if hand.state in ('bust', 'surrender'):
+            hand.success = (-1, 'lose')
+        elif dealer_hand.state == 'bust':
+            hand.success = (1, 'win')
+        elif hand.state == dealer_hand.state:
+            hand.success = (0, '(push) tie')
+        elif dealer_hand.state == 'blackjack':
+            hand.success = (-1, 'lose')
+        elif hand.state == 'blackjack':
+            hand.success = (1, 'win')
+        elif hand.state > dealer_hand.state:
+            hand.success = (1, 'win')
+        elif dealer_hand.state > hand.state:
+            hand.success = (-1, 'lose')
+        print(f"{hand.player} scored {hand.state}, {hand.success[1].upper()}S")
+
+
+    # TODO: make a player class, and have a player who can play again
+    # player gets a new hand, but their wins/lossess are tallied
+
+
 
 def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
     questions = [
@@ -77,8 +103,7 @@ def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
         choices = options,
         ),
     ]
-    answers = inquirer.prompt(questions)
-    return answers
+    return inquirer.prompt(questions)
 
 def check_twenty_one(hand, num = False, state='playing'):
     total = hand.get_total()
@@ -86,7 +111,7 @@ def check_twenty_one(hand, num = False, state='playing'):
         if hand.state == 'draw':
             hand.state = 'blackjack'
         else:
-            hand.state = 'twenty-one'
+            hand.state = 21
         return hand.state
     elif total > 21:
         if hand.person == 'dealer':
@@ -97,6 +122,7 @@ def check_twenty_one(hand, num = False, state='playing'):
                     if hand.get_total() <= 21: # re-check after changing ace
                         return check_twenty_one(hand)
         hand.state = 'bust'
+        hand.success = -1
         return 'bust'
     return False
 
