@@ -27,47 +27,42 @@ def play():
     for hand in player_hands:
         # display options for player
         print (f"{hand.player.upper()}'S TURN!!")
-        # display cards in your hand
-        print ('Your hand contains:')
-        print([[card.suit, card.face] for card in hand.cards])
-        # check blackjack
-        turn_res = check_twenty_one(hand)
-        if turn_res:
-            # print blackjack win statement to user
-            print(f'{hand.player} you have {turn_res}')
-            # go to next player
-            continue
-        # get user input for if they want to hit, stand, or surrender
-        # max cards a player can have is 11
 
-        player_move = player_choice(hand)['choice']
+        for j in range(12):
+            if hand.state == 'playing':
+                # display cards in your hand
+                print ('Your hand contains:')
+                print([[card.suit, card.face] for card in hand.cards])
+                # check blackjack
+                turn_res = check_twenty_one(hand)
+                if turn_res:
+                    # print blackjack win statement to user
+                    print(f'{hand.player} you have {turn_res}')
+                    # go to next player
+                    continue
 
-        print(player_move)
-        # switch (match/case) statement (python 3.10 and up)
-        # this would be more efficient
-        # match player_move:
-        #     case 'hit':
-        #         print('hit me with your rhythm stick')
-        #     case 'stand':
-        #         print('stand me up')
-        #     case 'surrender':
-        #         print('illogical loser')
-        if player_move == 'hit':
-            hit()
-        elif player_move == 'stand':
-            stand()
-        else: #'surrender'
-            surrender()
+                # get user input for if they want to hit, stand, or surrender
+                # max cards a player can have is 11
+
+                player_move = player_choice(hand)['choice']
+
+                print(player_move)
 
 
-def hit():
+                if player_move == 'hit':
+                    hand.hit(deck)
+                else: #'stand' or 'surrender'
+                    hand.state = player_move
+                    break
+            else:
+                break
+
+        # TODO: check deck doesn't get down to 0 cards OR make sure there are enough decks for the players
+
+def hit(hand, deck):
+    # not yet used
     print('hit me with your rhythm stick')
-
-def stand():
-    print('stand me up')
-
-def surrender():
-    print('illogical loser')
+    hand.hit(deck)
 
 def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
     questions = [
@@ -79,14 +74,14 @@ def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
     answers = inquirer.prompt(questions)
     return answers
 
-def check_twenty_one(hand, stage='draw'):
+def check_twenty_one(hand, state='playing'):
     if hand.get_total() == 21:
         if hand.person == 'dealer':
             #TODO: change all dealer aces into 1's are return false
             # if hand.cards contains card with card.face =='ace'
             #    return False
             print('Dealer aces always remain 11 in this game variant')
-        if hand.stage == 'draw':
+        if hand.state == 'playing':
             hand.state = 'blackjack'
         else:
             hand.state = 'twenty-one'

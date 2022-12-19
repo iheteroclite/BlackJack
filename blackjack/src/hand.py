@@ -5,7 +5,6 @@ class Hand:
 		# TODO take user input for value of 'player'
 		self.person = person_type
 		self.state = 'playing' #records blackjack, twenty-one, bust
-		self.stage = 'draw'
 		self.success = 'tbd'
 
 	def get_total(self):
@@ -13,4 +12,11 @@ class Hand:
 
 	def get_card_count(self):
 		return len(self.cards)
+
+	def hit(self, deck):
+		self.cards += deck.draw()
+
+	def stand(self, condition='stand'):
+		self.state = condition
+
 
