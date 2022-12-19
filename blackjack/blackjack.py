@@ -42,20 +42,20 @@ def play():
         # get user input for if they want to hit, stand, or surrender
         # max cards a player can have is 11
 
-        options = ['hit', 'stand', 'surrender']
+        player_move = player_choice(hand)
 
-        questions = [
-            inquirer.List('play_choice',
-                          message=f"{hand.player}, What do you do?",
-                          choices=options,
-                          ),
-        ]
-        answers = inquirer.prompt(questions)
+        print(player_move)
+        print(player_move['play_choice'])
 
-        print(answers)
-        print(answers['play_choice'])
-
-
+def player_choice(hand, options = ['hit', 'stand', 'surrender']):
+    questions = [
+    inquirer.List('play_choice',
+                  message=f"{hand.player}, What do you do?",
+                  choices=options,
+                  ),
+    ]
+    answers = inquirer.prompt(questions)
+    return answers
 
 def check_twenty_one(hand, stage='draw'):
     if hand.get_total() == 21:
