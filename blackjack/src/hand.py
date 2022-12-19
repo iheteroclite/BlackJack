@@ -4,7 +4,13 @@ class Hand:
 		self.player = player  #this will be player name like 'dealer', 'player1'
 		# TODO take user input for value of 'player'
 		self.person = person_type
-		self.card_count = len(self.cards)
-		self.total = 0; # function here
+		self.state = 'playing' #records blackjack, twenty-one, bust
+		self.stage = 'draw'
+		self.success = 'tbd'
 
+	def get_total(self):
+		return sum([card.value for card in self.cards])
+
+	def get_card_count(self):
+		return len(self.cards)
 
