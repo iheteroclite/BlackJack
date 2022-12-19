@@ -40,10 +40,34 @@ def play():
         # get user input for if they want to hit, stand, or surrender
         # max cards a player can have is 11
 
-        player_move = player_choice(hand)
+        player_move = player_choice(hand)['choice']
 
         print(player_move)
-        print(player_move['choice'])
+        # switch (match/case) statement (python 3.10 and up)
+        # this would be more efficient
+        # match player_move:
+        #     case 'hit':
+        #         print('hit me with your rhythm stick')
+        #     case 'stand':
+        #         print('stand me up')
+        #     case 'surrender':
+        #         print('illogical loser')
+        if player_move == 'hit':
+            hit()
+        elif player_move == 'stand':
+            stand()
+        else: #'surrender'
+            surrender()
+
+
+def hit():
+    print('hit me with your rhythm stick')
+
+def stand():
+    print('stand me up')
+
+def surrender():
+    print('illogical loser')
 
 def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
     questions = [
