@@ -7,6 +7,17 @@ class Card:
     def __init__(self, suit, face):
         self.suit = suit
         self.face = face
+        self.value = 0
+        try:
+            self.value = int(self.face)
+        except:
+            if self.face == faces[0]:
+                # for a player, value is always 11
+                self.value = 11
+                # TODO: (most variants) for a dealer, value changes to 1 if dealer total > 21
+                # ^ put this as a function of hand?
+            elif self.face in faces[10:]:
+                self.value = 10
 
 class Deck:
     def __init__(self, num_decks=1):

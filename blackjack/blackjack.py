@@ -16,6 +16,7 @@ def play():
     drawn = deck.draw(2)
     print([[card.suit, card.face] for card in drawn])
     # put those in cards in players hand
+    print('cardvals', [card.value for card in deck.cards])
 
 
 
