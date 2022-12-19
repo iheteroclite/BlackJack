@@ -28,26 +28,25 @@ def play():
         # display options for player
         print (f"{hand.player.upper()}'S TURN!!")
 
-        for j in range(12):
-            if hand.state == 'playing':
+        # max cards a player/dealer can have is 11 (1*4 + 2*4 +3*4 = 7*3 = 21)
+        for j in range(11):
+            if hand.state == 'playing' or hand.state == 'draw':
                 # display cards in your hand
                 print ('Your hand contains:')
                 print([[card.suit, card.face] for card in hand.cards])
                 # check blackjack
                 turn_res = check_twenty_one(hand)
                 if turn_res:
-                    # print blackjack win statement to user
+                    # print blackjack, twenty-one or bust statement to user
                     print(f'{hand.player} you have {turn_res}')
                     # go to next player
                     continue
 
                 # get user input for if they want to hit, stand, or surrender
-                # max cards a player can have is 11
 
                 player_move = player_choice(hand)['choice']
 
                 print(player_move)
-
 
                 if player_move == 'hit':
                     hand.hit(deck)
@@ -81,7 +80,7 @@ def check_twenty_one(hand, state='playing'):
             # if hand.cards contains card with card.face =='ace'
             #    return False
             print('Dealer aces always remain 11 in this game variant')
-        if hand.state == 'playing':
+        if hand.state == 'draw':
             hand.state = 'blackjack'
         else:
             hand.state = 'twenty-one'

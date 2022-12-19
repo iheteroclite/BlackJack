@@ -4,7 +4,7 @@ class Hand:
 		self.player = player  #this will be player name like 'dealer', 'player1'
 		# TODO take user input for value of 'player'
 		self.person = person_type
-		self.state = 'playing' #records blackjack, twenty-one, bust
+		self.state = 'draw' #records blackjack, twenty-one, bust
 		self.success = 'tbd'
 
 	def get_total(self):
@@ -14,6 +14,7 @@ class Hand:
 		return len(self.cards)
 
 	def hit(self, deck):
+		self.state = 'playing'
 		self.cards += deck.draw()
 
 	def stand(self, condition='stand'):
