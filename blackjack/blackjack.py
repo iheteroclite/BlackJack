@@ -6,9 +6,12 @@ from src.hand import Hand
 
 def play():
     # setup number of players and decks
+    num_players = player_choice(False, "number of players", [num+1 for num in range(5)])['choice']
+    print('number of players selected was:', num_players)
     # TODO: take from an input
-    num_players = 2
-    num_decks = 1
+    #num_players = 2
+    num_decks = player_choice(False, "number of decks", [num+1 for num in range(8)])['choice']
+    print('number of decks selected was:', num_decks)
     # make a deck
     deck = Deck(num_decks)
     #print([[card.suit, card.face] for card in deck.cards])
@@ -19,11 +22,6 @@ def play():
     #print('dealer hand',[[card.suit, card.face, card.value] for card in dealer_hand.cards])
     #print('dealer_val', dealer_hand.total)
     #print('player hand',[[[card.suit, card.face, card.value] for card in hand.cards] for hand in player_hands])
-
-    #drawn = deck.draw(2)
-    #print([[card.suit, card.face] for card in drawn])
-    # put those in cards in players hand
-    #print('cardvals', [card.value for card in deck.cards])
 
     # do first player's round
     for hand in player_hands:
@@ -45,12 +43,12 @@ def play():
         player_move = player_choice(hand)
 
         print(player_move)
-        print(player_move['play_choice'])
+        print(player_move['choice'])
 
-def player_choice(hand, options = ['hit', 'stand', 'surrender']):
+def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
     questions = [
-    inquirer.List('play_choice',
-                  message=f"{hand.player}, What do you do?",
+    inquirer.List('choice',
+                  message=f"{hand.player}, What do you do?" if hand else f'Select {msg_str}:',
                   choices=options,
                   ),
     ]
@@ -73,12 +71,6 @@ def check_twenty_one(hand, stage='draw'):
         hand.state = 'bust'
         return 'bust'
     return False
-
-
-
-
-
-
 
 
 if __name__ == '__main__':
