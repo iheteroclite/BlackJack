@@ -6,26 +6,26 @@ from src.hand import Hand
 
 def play():
     # setup number of players and decks
-    num_players = player_choice(False, "number of players", [num+1 for num in range(5)])['choice']
+    chose = player_choice(False, "players", [n+1 for n in range(5)])
+    num_players = chose['choice']
     print('number of players selected was:', num_players)
-    # TODO: take from an input
-    #num_players = 2
-    num_decks = player_choice(False, "number of decks", [num+1 for num in range(8)])['choice']
-    print('number of decks selected was:', num_decks)
+
     # make a deck
+    min_decks = 2 if num_players > 4 else 1
+    chose = player_choice(False, "decks", [n+min_decks for n in range(8)])
+    num_decks = chose['choice']
+    print('number of decks selected was:', num_decks)
     deck = Deck(num_decks)
-    #print([[card.suit, card.face] for card in deck.cards])
 
-    #start game by making everyone's hand
+    # start game by making everyone's hand
     dealer_hand = Hand(deck, 'Dealer', 'dealer')
-    player_hands = [Hand(deck, f'Player {x + 1}', 'player') for x in range(num_players) ]
-    #print('dealer hand',[[card.suit, card.face, card.value] for card in dealer_hand.cards])
-    #print('dealer_val', dealer_hand.total)
-    #print('player hand',[[[card.suit, card.face, card.value] for card in hand.cards] for hand in player_hands])
+    player_hands = [Hand(deck, f'Player {x + 1}', 'player')
+        for x in range(num_players)]
 
-    # do first player's round
+    # players' turns
     for hand in player_hands:
-        # display options for player
+        # alert which player's turn
+        # TODO: take player input/consent before displaying cards
         print (f"{hand.player.upper()}'S TURN!!")
 
         # max cards a player/dealer can have is 11 (1*4 + 2*4 +3*4 = 7*3 = 21)
@@ -43,20 +43,24 @@ def play():
                     continue
 
                 # get user input for if they want to hit, stand, or surrender
-
                 player_move = player_choice(hand)['choice']
 
                 print(player_move)
 
                 if player_move == 'hit':
                     hand.hit(deck)
-                else: #'stand' or 'surrender'
-                    hand.state = player_move
+                elif player_move == 'stand': #'stand'
+                    hand.state = hand.get_total() #total of player's cards
                     break
+                elif player_move == 'surrender':
+                    hand.state = player_move
             else:
                 break
 
-        # TODO: check deck doesn't get down to 0 cards OR make sure there are enough decks for the players
+        # TODO: check deck doesn't get down to 0 cards
+        # OR make sure there are enough decks for the players
+
+        # Dealer's turn
 
 def hit(hand, deck):
     # not yet used
@@ -64,11 +68,12 @@ def hit(hand, deck):
     hand.hit(deck)
 
 def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
+    question = f"{hand.player}, What do you do?"
     questions = [
     inquirer.List('choice',
-                  message=f"{hand.player}, What do you do?" if hand else f'Select {msg_str}:',
-                  choices=options,
-                  ),
+        message = question if hand else f'Select number of {msg_str}:',
+        choices = options,
+        ),
     ]
     answers = inquirer.prompt(questions)
     return answers
