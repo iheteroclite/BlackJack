@@ -1,27 +1,22 @@
-## Blackjack Tech Test - Starter Code
-
-This code is offered as a potential starting point for completing the BBC Software Engineering Graduate Scheme tech test.
-You do **not** have to use this starter code.
-
+## Blackjack - CLI
 
 ### Getting started
 
 - Ensure you can run the provided code. 
     - If you have Python 3 installed:
-        - Open a terminal window and navigate to the folder containing this README.
+        - Open a terminal
+        - `ls` to check you are in a folder showing the file `blackjack.py`
         - Type `python3 blackjack.py`
         - Look for a welcome message in the console.
     - If that doesn't work, check your setup and download Python 3 if needed:
         - https://wiki.python.org/moin/BeginnersGuide/Download
-- Ensure you can run the unit tests.
+- To run the unit tests.
     - From the same terminal window, type `python3 -m unittest discover test`.
-    - Python should find and run the one provided failing test.
-    
+
 
 ### Adding to the starter code
 
-- A great place to start is by making that first test pass.
-    - Clue- the provided Deck class has an array of cards, and it's empty!
+
 - A TDD (test-driven development) approach can be useful:
     - write a failing test that describes what you want your code to do
         - e.g. 'a deck should have 52 cards'
