@@ -1,13 +1,15 @@
 import random
 
-suits = ['diamonds', 'clubs', 'hearts', 'spades']
-faces = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
+suits = ['♦', '♣', '♥', '♠']
+faces = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
+
 
 class Card:
     def __init__(self, suit, face):
         self.suit = suit
         self.face = face
         self.value = 0
+        self.lines = []
         try:
             self.value = int(self.face)
         except:

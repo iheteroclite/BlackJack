@@ -24,7 +24,6 @@ def play():
         for x in range(num_players)]
     player_hands.append(dealer_hand)
 
-
     # Players' turns
     for hand in player_hands:
         # alert which player's turn
@@ -36,7 +35,8 @@ def play():
             if hand.state == 'playing' or hand.state == 'draw':
                 # display cards in your hand
                 print ('Your hand contains:')
-                print([[card.suit, card.face] for card in hand.cards])
+                print(hand)
+
                 # check blackjack
                 turn_res = check_twenty_one(hand)
                 if turn_res:
@@ -74,32 +74,37 @@ def play():
 
     # Final score
     for hand in player_hands[:-1]:  #bust, a total, blackjack, surrender
+        # hand_val = 0
+        # if hand.state in ('bust', 'surrender', 'blackjack'):
+        #     hand_val = 23 if hand.state == 'blackjack' else 0
+
         if hand.state in ('bust', 'surrender'):
-            hand.success = (-1, 'lose')
+            hand.success = -1
         elif dealer_hand.state == 'bust':
-            hand.success = (1, 'win')
+            hand.success = 1
         elif hand.state == dealer_hand.state:
-            hand.success = (0, '(push) tie')
+            hand.success = 0
         elif dealer_hand.state == 'blackjack':
-            hand.success = (-1, 'lose')
+            hand.success = -1
         elif hand.state == 'blackjack':
-            hand.success = (1, 'win')
+            hand.success = 1
         elif hand.state > dealer_hand.state:
-            hand.success = (1, 'win')
+            hand.success = 1
         elif dealer_hand.state > hand.state:
-            hand.success = (-1, 'lose')
-        print(f"{hand.player} scored {hand.state}, {hand.success[1].upper()}S")
+            hand.success = -1
+        success = 'win' if hand.success == 1 else 'lose' if hand.success == -1 else '(push) tie'
+        print(f"{hand.player} scored {hand.state}, {success.upper()}S")
 
 
     # TODO: make a player class, and have a player who can play again
     # player gets a new hand, but their wins/lossess are tallied
 
 
-
 def player_choice(hand, msg_str="", options = ['hit', 'stand', 'surrender']):
+    parts = [", What do you do?", "Select number of "]
     questions = [
     inquirer.List('choice',
-        message = f"{hand.player}, What do you do?" if hand else f'Select number of {msg_str}:',
+        message = f'{hand.player}{parts[0]}' if hand else f'{parts[1]}{msg_str}:',
         choices = options,
         ),
     ]
@@ -117,7 +122,7 @@ def check_twenty_one(hand, num = False, state='playing'):
         if hand.person == 'dealer':
             # for each ace, dealer takes its value as 1, and re-checks score
             for card in hand.cards:
-                if card.face=='ace':
+                if card.face=='Ace':
                     card.value = 1
                     if hand.get_total() <= 21: # re-check after changing ace
                         return check_twenty_one(hand)
