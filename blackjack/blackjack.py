@@ -5,10 +5,11 @@ from src.hand import Hand
 
 
 def play():
-    # Setup number of players and decks
+    # Setup number of players and ace value
     chose = player_choice("players", 1, [n+1 for n in range(5)])
     num_players = chose['choice']
     print('number of players selected was:', num_players)
+    ace_value = player_choice("Select the value of aces", 3)
 
     # Make a deck
     # min cards ensures there's at least 1 deck per 4 players
@@ -103,7 +104,7 @@ def play():
 
 
 def player_choice(msg_str="", i=0, options = ['hit', 'stand', 'surrender'], hand=False,):
-    parts = [", What do you do?", "Select number of ", " are you ready?"]
+    parts = [", What do you do?", "Select number of ", " are you ready?", ""]
     questions = [
     inquirer.List('choice',
         message = f'{hand.player}{parts[i]}' if hand else f'{parts[i]}{msg_str}',
