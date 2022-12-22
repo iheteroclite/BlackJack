@@ -1,6 +1,7 @@
 top = ' ____________ '
+pads_top = '/' + ' '*12 + '\\'
 pads = '|' + ' '*12 + '|'
-bottom = '|____________|'
+bottom = '\\____________/'
 
 class Hand:
 	def __init__(self, deck, player, person_type='player'):
@@ -15,10 +16,12 @@ class Hand:
 		tot = self.get_card_count()
 		faces_str = ''
 		suits_str = ''
+		suits_two = ''
 		for card in self.cards:
 			faces_str += '|' + card.face.center(12) + '|'
-			suits_str += '|' + card.suit.center(12) + '|'
-		return '\n'.join([top*tot, pads * tot, faces_str, pads * tot,pads * tot, suits_str, bottom * tot])
+			suits_two += f'|  {card.suit}     {card.suit}   |'
+			suits_str += f'|     {card.suit}      |'
+		return '\n'.join([top*tot, pads_top * tot, faces_str, pads * tot, suits_two, pads * tot, suits_str, bottom * tot])
 
 
 	def get_total(self):
