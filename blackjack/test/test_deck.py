@@ -69,7 +69,16 @@ class DeckTestCase(unittest.TestCase):
         self.assertEqual(values, [11, 1, 11, [1, 11, 1]])
 
     def test_deck_ace_value_one_or_eleven(self):
-        pass
+        # make a deck with ace_value=1, and a deck for ace_val=11
+        # test they have correct ace values
+        truth = [0]*3
+        values = [11, 1, 11]
+        decks = [Deck(), Deck(1, values[1]), Deck(1, values[2])]
+        for i, deck in enumerate(decks):
+            for card in deck.cards:
+                truth[i] += 1 if (card.face == 'Ace' and card.value == values[i]) else 0
+        self.assertEqual(truth, [4]*3)
+
 
 
 if __name__ == '__main__':
