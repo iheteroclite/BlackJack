@@ -1,7 +1,8 @@
 import unittest
-from src.deck import Deck
+from src.deck import Deck, Card, suits, faces
 from src.hand import Hand
 
+#python3 -m unittest discover test
 
 class DeckTestCase(unittest.TestCase):
 
@@ -40,7 +41,23 @@ class DeckTestCase(unittest.TestCase):
         self.deck.draw()
         self.assertEqual(len(self.deck.cards), 47)
 
+    def test_number_card_worth_its_value(self):
+        card_values = [Card(suits[0], face=x).value for x in range(2,10)]
+        self.assertEqual(card_values, [2, 3, 4, 5, 6, 7, 8, 9])
 
+    def test_king_queen_jack_worth_ten(self):
+        card_values = [Card(suits[1], face).value for face in faces[10:]]
+        self.assertEqual(card_values, [10]*3)
+
+    def test_suit_inconsequential_to_face(self):
+        suit_list = [Card(suits[0], face).face for suit in suits for face in faces]
+        self.assertEqual(suit_list, faces*4)
+
+
+    def test_suit_inconsequential_to_value(self):
+        suit_list = [Card(suits[0], face).value for suit in suits for face in faces]
+        #self.assertEqual(suit_list, [11,
+        # ^ this needs to be a list of all the values
 
 if __name__ == '__main__':
     unittest.main()

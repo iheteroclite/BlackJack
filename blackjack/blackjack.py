@@ -71,15 +71,10 @@ def play():
             else:
                 break
 
-    dealers_score = dealer_hand.state
-    print(f"The dealer's score is: {dealers_score}")
+    print(f"The dealer's score is: {dealer_hand.state}")
 
     # Final score
     for hand in player_hands[:-1]:  #bust, a total, blackjack, surrender
-        # hand_val = 0
-        # if hand.state in ('bust', 'surrender', 'blackjack'):
-        #     hand_val = 23 if hand.state == 'blackjack' else 0
-
         if hand.state in ('bust', 'surrender'):
             hand.success = -1
         elif dealer_hand.state == 'bust':
@@ -135,7 +130,6 @@ def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
                     if hand.get_total() <= 21: # re-check after changing ace
                         return check_twenty_one(hand)
         hand.state = 'bust'
-        hand.success = -1
         return 'bust'
     return False
 
