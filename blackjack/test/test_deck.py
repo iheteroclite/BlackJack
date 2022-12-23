@@ -50,14 +50,12 @@ class DeckTestCase(unittest.TestCase):
         self.assertEqual(card_values, [10]*3)
 
     def test_suit_inconsequential_to_face(self):
-        suit_list = [Card(suits[0], face).face for suit in suits for face in faces]
-        self.assertEqual(suit_list, faces*4)
-
+       suit_list = [Card(suits[0], face).face for suit in suits for face in faces]
+       self.assertEqual(suit_list, faces*4)
 
     def test_suit_inconsequential_to_value(self):
-        suit_list = [Card(suits[0], face).value for suit in suits for face in faces]
-        #self.assertEqual(suit_list, [11,
-        # ^ this needs to be a list of all the values
+       suit_list = [Card(suits[0], face).value for suit in suits for face in faces]
+       self.assertEqual(suit_list, [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]*4 )
 
 if __name__ == '__main__':
     unittest.main()
