@@ -3,22 +3,18 @@ import inquirer
 from src.deck import Deck
 from src.hand import Hand
 
-# issue: ['choice'] repeated: add it to return of player_choice function
-
 def play():
     # Setup number of players and ace value
-    chose = player_choice("players", 1, [n+1 for n in range(5)])
-    num_players = chose['choice']
+    num_players = player_choice("players", 1, [n+1 for n in range(5)])
     print('number of players selected was:', num_players)
     player_ace = 'Player chooses'
     ace_qn = "Select the value of player's Aces"
-    ace_value = player_choice(ace_qn, 3, [1, 11, player_ace])['choice']
+    ace_value = player_choice(ace_qn, 3, [1, 11, player_ace])
 
     # Make a deck
     # min cards ensures there's at least 1 deck per 4 players
     min_decks = 2 if num_players > 4 else 1
-    chose = player_choice("decks", 1, [n+min_decks for n in range(8)])
-    num_decks = chose['choice']
+    num_decks = player_choice("decks", 1, [n+min_decks for n in range(8)])
     print('number of decks selected was:', num_decks)
     deck = Deck(num_decks, ace_value)
 
@@ -54,7 +50,7 @@ def play():
                 # get user input for if they want to hit, stand, or surrender
                 player_move = ''
                 if hand.person == 'player':
-                    player_move = player_choice(hand=hand)['choice']
+                    player_move = player_choice(hand=hand)
                 elif hand.person == 'AI':
                     # TODO: add an option to have AI make choices
                     # can modify dealer draw so they only draw to specific val
@@ -115,7 +111,7 @@ def player_choice(msg="", i=0, options = ['hit', 'stand', 'surrender'], hand=Fal
         choices = options,
         ),
     ]
-    return inquirer.prompt(questions)
+    return inquirer.prompt(questions)['choice']
 
 # TODO: remove num and state args if not used
 def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
@@ -134,7 +130,7 @@ def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
                 val_qn = f"Your {i}{ordinal} card is an Ace. Select its value"
 
                 if hand.person == 'dealer' or (ace_choice and \
-                    player_choice(val_qn, 3, [1, 11])['choice']==1):
+                    player_choice(val_qn, 3, [1, 11])==1):
                     card.set_ace_value(1)
                     if hand.get_total() <= 21: # re-check after changing ace
                         return check_twenty_one(hand)
