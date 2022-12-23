@@ -57,5 +57,20 @@ class DeckTestCase(unittest.TestCase):
        suit_list = [Card(suits[0], face).value for suit in suits for face in faces]
        self.assertEqual(suit_list, [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]*4 )
 
+    def test_card_ace_value_one_or_eleven(self):
+        aces = [Card(suits[1], faces[0])]
+        aces.append(Card(suits[1], faces[0], 1))
+        aces.append(Card(suits[1], faces[0], 11))
+        values = [ace.value for ace in aces]
+        aces[1].set_ace_value(11)
+        aces[0].set_ace_value(1)
+        aces[2].set_ace_value(1)
+        values.append([ace.value for ace in aces])
+        self.assertEqual(values, [11, 1, 11, [1, 11, 1]])
+
+    def test_deck_ace_value_one_or_eleven(self):
+        pass
+
+
 if __name__ == '__main__':
     unittest.main()
