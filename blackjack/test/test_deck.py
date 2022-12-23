@@ -79,7 +79,31 @@ class DeckTestCase(unittest.TestCase):
                 truth[i] += 1 if (card.face == 'Ace' and card.value == values[i]) else 0
         self.assertEqual(truth, [4]*3)
 
+    def test_receive_1_card_when_hit(self):
+        pass
 
+    def test_score_updated_when_receive_card(self):
+        pass
+
+    def test_21_or_less_is_valid)hand(self):
+        pass
+
+    def test_22_or_more_invalid_hand_bust(self):
+        pass
+
+
+    def test_king_and_ace_equals_blackjack(self):
+        pass
+
+    def test_king_queen_ace_equals_21(self):
+        pass
+
+    def test_nine_ace_ace_equals_21(self):
+        pass
+
+
+    # once all these tests are written, and comments cleared up,
+    # issues raised on github, create Version 1
 
 if __name__ == '__main__':
     unittest.main()
