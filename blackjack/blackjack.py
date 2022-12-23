@@ -3,13 +3,16 @@ import inquirer
 from src.deck import Deck
 from src.hand import Hand
 
+# issue: ['choice'] repeated: add it to return of player_choice function
 
 def play():
     # Setup number of players and ace value
     chose = player_choice("players", 1, [n+1 for n in range(5)])
     num_players = chose['choice']
     print('number of players selected was:', num_players)
-    ace_value = player_choice("Select the value of aces", 3)
+    player_ace = 'Player chooses'
+    ace_qn = "Select the value of player's Aces"
+    ace_value = player_choice(ace_qn, 3, [1, 11, player_ace])['choice']
 
     # Make a deck
     # min cards ensures there's at least 1 deck per 4 players
@@ -17,7 +20,7 @@ def play():
     chose = player_choice("decks", 1, [n+min_decks for n in range(8)])
     num_decks = chose['choice']
     print('number of decks selected was:', num_decks)
-    deck = Deck(num_decks)
+    deck = Deck(num_decks, ace_value)
 
     # Start game by making everyone's hand
     dealer_hand = Hand(deck, 'Dealer', 'dealer')
@@ -41,7 +44,7 @@ def play():
                 print(hand)
 
                 # check blackjack
-                turn_res = check_twenty_one(hand)
+                turn_res = check_twenty_one(hand, player_ace==ace_value)
                 if turn_res:
                     # print blackjack, twenty-one or bust statement to user
                     print(f'{hand.player} you have {turn_res}')
@@ -95,25 +98,27 @@ def play():
             hand.success = 1
         elif dealer_hand.state > hand.state:
             hand.success = -1
-        success = 'win' if hand.success == 1 else 'lose' if hand.success == -1 else '(push) tie'
+        success = 'win' if hand.success == 1 else \
+            'lose' if hand.success == -1 else '(push) tie'
         print(f"{hand.player} scored {hand.state}, {success.upper()}S")
 
 
     # TODO: make a player class, and have a player who can play again
     # player gets a new hand, but their wins/lossess are tallied
 
-
-def player_choice(msg_str="", i=0, options = ['hit', 'stand', 'surrender'], hand=False,):
-    parts = [", What do you do?", "Select number of ", " are you ready?", ""]
+# TODO: 'Select value of ' or {} format strings
+def player_choice(msg="", i=0, options = ['hit', 'stand', 'surrender'], hand=False,):
+    parts = [", What do you do?", "Select number of ", " are you ready?", " "]
     questions = [
     inquirer.List('choice',
-        message = f'{hand.player}{parts[i]}' if hand else f'{parts[i]}{msg_str}',
+        message = f'{hand.player}{parts[i]}' if hand else f'{parts[i]}{msg}',
         choices = options,
         ),
     ]
     return inquirer.prompt(questions)
 
-def check_twenty_one(hand, num = False, state='playing'):
+# TODO: remove num and state args if not used
+def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
     total = hand.get_total()
     if total == 21:
         if hand.state == 'draw':
@@ -122,11 +127,15 @@ def check_twenty_one(hand, num = False, state='playing'):
             hand.state = 21
         return hand.state
     elif total > 21:
-        if hand.person == 'dealer':
-            # for each ace, dealer takes its value as 1, and re-checks score
-            for card in hand.cards:
-                if card.face=='Ace':
-                    card.value = 1
+        # for each ace, dealer takes its value as 1, and re-checks score
+        for i, card in enumerate(hand.cards, 1):
+            if card.face=='Ace' and card.value != 1:
+                ordinal = 'st' if i==1 else 'nd' if i==2 else 'rd' if i==3 else 'th'
+                val_qn = f"Your {i}{ordinal} card is an Ace. Select its value"
+
+                if hand.person == 'dealer' or (ace_choice and \
+                    player_choice(val_qn, 3, [1, 11])['choice']==1):
+                    card.set_ace_value(1)
                     if hand.get_total() <= 21: # re-check after changing ace
                         return check_twenty_one(hand)
         hand.state = 'bust'

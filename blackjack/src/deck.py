@@ -5,7 +5,7 @@ faces = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', '
 
 
 class Card:
-    def __init__(self, suit, face):
+    def __init__(self, suit, face, ace_value=11):
         self.suit = suit
         self.face = face
         self.value = 0
@@ -14,18 +14,21 @@ class Card:
             self.value = int(self.face)
         except:
             if self.face == faces[0]:
-                # for a player, value is always 11
-                self.value = 11
-                # TODO: (most variants) for a dealer, value changes to 1 if dealer total > 21
-                # ^ put this as a function of hand?
+                if ace_value == 1:
+                    self.value = 1
+                else:
+                    self.value = 11
             elif self.face in faces[10:]:
                 self.value = 10
 
+    def set_ace_value(self, ace_value):
+        self.value = ace_value
+
 class Deck:
-    def __init__(self, num_decks=1):
+    def __init__(self, num_decks=1, ace=11):
         if num_decks > 8:
             num_decks = 8
-        self.cards = [Card(s, f) for s in suits for f in faces]*num_decks
+        self.cards = [Card(s, f, ace) for s in suits for f in faces]*num_decks
         self.shuffle_deck()
 
     def shuffle_deck(self):
