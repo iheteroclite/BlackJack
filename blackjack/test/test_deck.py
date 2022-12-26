@@ -25,12 +25,11 @@ class DeckTestCase(unittest.TestCase):
 
     def test_player_auto_names(self):
         num_players = 4
-        player_list = ''
-        player_hands = [Hand(self.deck, f'Player {x + 1}', 'player') \
-            for x in range(num_players) ]
         for i in range(num_players):
-            player_list += player_hands[i].player
-        self.assertEqual(player_list, 'Player 1Player 2Player 3Player 4')
+            player_str = f'Player {i + 1}'
+            hand = Hand(self.deck, player_str, 'player')
+            with self.subTest(player=player_str):
+                self.assertEqual(hand.player, player_str)
 
     def test_number_deck_cards_after_draws(self):
         num_players = 2
