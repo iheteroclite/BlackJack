@@ -1,7 +1,7 @@
 import unittest
 from src.deck import Deck, Card, suits, faces
 from src.hand import Hand
-
+from blackjack import check_twenty_one
 #python3 -m unittest discover test
 
 class DeckTestCase(unittest.TestCase):
@@ -27,17 +27,17 @@ class DeckTestCase(unittest.TestCase):
         self.assertTrue(card_int_val_truth)
 
     def test_player_auto_names(self):
-        num_players = 2
+        num_players = 4
         player_list = ''
-        player_hands = [Hand(self.deck, f'Player {x + 1}', 'player') for x in range(num_players) ]
+        player_hands = [Hand(self.deck, f'Player {x + 1}', 'player') \
+            for x in range(num_players) ]
         for i in range(num_players):
             player_list += player_hands[i].player
-        self.assertEqual(player_list, 'Player 1Player 2')
+        self.assertEqual(player_list, 'Player 1Player 2Player 3Player 4')
 
     def test_number_deck_cards_after_draws(self):
         num_players = 2
-        player_list = ''
-        player_hands = [Hand(self.deck, f'Player {x + 1}', 'player') for x in range(num_players) ]
+        hands = [Hand(self.deck, f'P{x}', 'player') for x in range(num_players)]
         self.deck.draw()
         self.assertEqual(len(self.deck.cards), 47)
 
@@ -80,30 +80,67 @@ class DeckTestCase(unittest.TestCase):
         self.assertEqual(truth, [4]*3)
 
     def test_receive_1_card_when_hit(self):
-        pass
+        my_hand = Hand(self.deck, 'bob')
+        old_hand_len = len(my_hand.cards)
+        my_hand.hit(self.deck)
+        self.assertTrue(len(my_hand.cards) == (old_hand_len + 1))
 
-    def test_score_updated_when_receive_card(self):
-        pass
+    def test_score_updated_correctly_when_receive_card(self):
+        '''This program calulates score after the dealer's turn
+        so this tests the function of hand.get_score() to calculate score '''
+        hand = Hand(self.deck, 'jim')
+        initial_score = hand.get_total()
+        hand.cards += [ Card(suits[2], 7)]
+        first_score = hand.get_total()
+        hand.cards += [Card(suits[2], 'Jack')]
+        self.assertTrue(hand.get_total() == (first_score + 10) )
 
-    def test_21_or_less_is_valid)hand(self):
-        pass
+    def test_21_or_less_is_valid_hand(self):
+        poss_scores = [i for i in range(1, 20)]
+        hand = Hand(self.deck, 'alice')
+        checked = []
+        for j, score in enumerate(poss_scores):
+            hand.cards = [Card(suits[0], 1), Card(suits[1], score)]
+            checked.append(check_twenty_one(hand))
+            if checked[j] == 'blackjack' or 21:
+                checked[j] = False
+        self.assertTrue(not any(checked))
 
     def test_22_or_more_invalid_hand_bust(self):
-        pass
-
+        poss_scores = [i for i in range(2, 19)]
+        hand = Hand(self.deck, 'jane')
+        bust = True
+        for j, score in enumerate(poss_scores):
+            hand.cards = [Card(suits[0], 10), Card(suits[0], 10), Card(suits[1], score)]
+            checked = check_twenty_one(hand)
+            if checked != 'bust':
+                bust = False
+        self.assertTrue(bust)
 
     def test_king_and_ace_equals_blackjack(self):
-        pass
+        hand = Hand(self.deck, 'bri')
+        hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Ace')]
+        score = check_twenty_one(hand)
+        self.assertEqual(score, 'blackjack')
 
     def test_king_queen_ace_equals_21(self):
-        pass
+        hand = Hand(self.deck, 'tom')
+        hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Queen'), Card(suits[0], 'Ace', 1)]
+        hand.state = 'playing'
+        score = check_twenty_one(hand)
+        self.assertEqual(score, 21)
 
     def test_nine_ace_ace_equals_21(self):
+        '''Assumes the program accurately sets the ace value '''
+        hand = Hand(self.deck, 'zoe')
+        hand.cards = [Card(suits[0], 9), Card(suits[0], 'Ace'), Card(suits[0], 'Ace', 1)]
+        hand.state = 'playing'
+        score = check_twenty_one(hand)
+        self.assertEqual(score, 21)
+
+    def test_correctly_set_selected_ace_vale(self):
+        '''Makes a deck of aces, initialises the input  '''
         pass
-
-
-    # once all these tests are written, and comments cleared up,
-    # issues raised on github, create Version 1
 
 if __name__ == '__main__':
     unittest.main()

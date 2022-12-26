@@ -6,7 +6,7 @@ from src.hand import Hand
 def play():
     # Setup number of players and ace value
     num_players = player_choice("players", 1, [n+1 for n in range(5)])
-    print('number of players selected was:', num_players)
+    print('Number of players selected was:', num_players)
     player_ace = 'Player chooses'
     ace_qn = "Select the value of player's Aces"
     ace_value = player_choice(ace_qn, 3, [1, 11, player_ace])
@@ -15,7 +15,7 @@ def play():
     # min cards ensures there's at least 1 deck per 4 players
     min_decks = 2 if num_players > 4 else 1
     num_decks = player_choice("decks", 1, [n+min_decks for n in range(8)])
-    print('number of decks selected was:', num_decks)
+    print('Number of decks selected was:', num_decks)
     deck = Deck(num_decks, ace_value)
 
     # Start game by making everyone's hand
@@ -75,27 +75,31 @@ def play():
 
     # Final score
     for hand in player_hands[:-1]:  #bust, a total, blackjack, surrender
-        if hand.state in ('bust', 'surrender'):
-            hand.success = -1
-        elif dealer_hand.state == 'bust':
-            hand.success = 1
-        elif hand.state == dealer_hand.state:
-            hand.success = 0
-        elif dealer_hand.state == 'blackjack':
-            hand.success = -1
-        elif hand.state == 'blackjack':
-            hand.success = 1
-        elif hand.state > dealer_hand.state:
-            hand.success = 1
-        elif dealer_hand.state > hand.state:
-            hand.success = -1
-        success = 'win' if hand.success == 1 else \
-            'lose' if hand.success == -1 else '(push) tie'
+        success = score_hand(hand, dealer_hand)
         print(f"{hand.player} scored {hand.state}, {success.upper()}S")
 
 
     # TODO: make a player class, and have a player who can play again
     # player gets a new hand, but their wins/lossess are tallied
+
+def score_hand(hand, dealer_hand):
+    if hand.state in ('bust', 'surrender'):
+        hand.success = -1
+    elif dealer_hand.state == 'bust':
+        hand.success = 1
+    elif hand.state == dealer_hand.state:
+        hand.success = 0
+    elif dealer_hand.state == 'blackjack':
+        hand.success = -1
+    elif hand.state == 'blackjack':
+        hand.success = 1
+    elif hand.state > dealer_hand.state:
+        hand.success = 1
+    elif dealer_hand.state > hand.state:
+        hand.success = -1
+    return 'win' if hand.success == 1 else \
+        'lose' if hand.success == -1 else '(push) tie'
+
 
 # TODO: 'Select value of ' or {} format strings
 def player_choice(msg="", i=0, options = ['hit', 'stand', 'surrender'], hand=False,):

@@ -31,6 +31,7 @@ class Hand:
 	def get_card_count(self):
 		return len(self.cards)
 
+	# TODO: dealer hits, not hand
 	def hit(self, deck):
 		self.state = 'playing'
 		self.cards += deck.draw()
