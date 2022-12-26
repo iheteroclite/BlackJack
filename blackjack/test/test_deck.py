@@ -8,6 +8,7 @@ class DeckTestCase(unittest.TestCase):
 
     def setUp(self):  # this method will be run before each test
         self.deck = Deck()
+        self.deck_new = Deck(1, 20)
 
     def tearDown(self):  # this method will be run after each tests
         pass
@@ -18,13 +19,9 @@ class DeckTestCase(unittest.TestCase):
         self.assertTrue(number_of_cards in [52*n for n in range(8)])
 
     def test_cards_integer_value(self):
-        card_int_val_truth = True
         for card in self.deck.cards:
-            if not 1 <= card.value <= 11:
-                card_int_val_truth *= False
-            elif card.value % 1 != 0: #test for integer
-                card_int_val_truth *= False
-        self.assertTrue(card_int_val_truth)
+            with self.subTest(fail_card = f"{card.suit}, {card.face}"):
+                self.assertTrue((1 <= card.value <= 11) and (card.value % 1 == 0))
 
     def test_player_auto_names(self):
         num_players = 4
@@ -83,7 +80,7 @@ class DeckTestCase(unittest.TestCase):
         my_hand = Hand(self.deck, 'bob')
         old_hand_len = len(my_hand.cards)
         my_hand.hit(self.deck)
-        self.assertTrue(len(my_hand.cards) == (old_hand_len + 1))
+        self.assertEqual(len(my_hand.cards), (old_hand_len + 1))
 
     def test_score_updated_correctly_when_receive_card(self):
         '''This program calulates score after the dealer's turn
@@ -93,7 +90,7 @@ class DeckTestCase(unittest.TestCase):
         hand.cards += [ Card(suits[2], 7)]
         first_score = hand.get_total()
         hand.cards += [Card(suits[2], 'Jack')]
-        self.assertTrue(hand.get_total() == (first_score + 10) )
+        self.assertEqual(hand.get_total(), (first_score + 10) )
 
     def test_21_or_less_is_valid_hand(self):
         poss_scores = [i for i in range(1, 20)]
@@ -104,7 +101,7 @@ class DeckTestCase(unittest.TestCase):
             checked.append(check_twenty_one(hand))
             if checked[j] == 'blackjack' or 21:
                 checked[j] = False
-        self.assertTrue(not any(checked))
+        self.assertFalse(any(checked))
 
     def test_22_or_more_invalid_hand_bust(self):
         poss_scores = [i for i in range(2, 19)]

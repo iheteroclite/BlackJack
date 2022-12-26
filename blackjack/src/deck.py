@@ -17,7 +17,7 @@ class Card:
                 if ace_value == 1:
                     self.value = 1
                 else:
-                    self.value = 11
+                    self.value = ace_value
             elif self.face in faces[10:]:
                 self.value = 10
 
