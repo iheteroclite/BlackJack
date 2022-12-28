@@ -42,7 +42,6 @@ def play():
                 # check blackjack
                 turn_res = check_twenty_one(hand, player_ace==ace_value)
                 if turn_res:
-                    # print blackjack, twenty-one or bust statement to user
                     print(f'{hand.player} you have {turn_res}')
                     # go to next player
                     continue
@@ -136,6 +135,7 @@ def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
         hand.state = 'bust'
         return 'bust'
     return False
+
 
 def dealer_move(hand, num):
     if hand.get_total() >= num:

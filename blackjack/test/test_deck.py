@@ -54,6 +54,7 @@ class DeckTestCase(unittest.TestCase):
        self.assertEqual(suit_list, [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]*4 )
 
     def test_card_ace_value_one_or_eleven(self):
+        # TODO: make this use subTest
         aces = [Card(suits[1], faces[0])]
         aces.append(Card(suits[1], faces[0], 1))
         aces.append(Card(suits[1], faces[0], 11))
@@ -86,6 +87,7 @@ class DeckTestCase(unittest.TestCase):
         so this tests the function of hand.get_score() to calculate score '''
         hand = Hand(self.deck, 'jim')
         initial_score = hand.get_total()
+
         hand.cards += [ Card(suits[2], 7)]
         first_score = hand.get_total()
         hand.cards += [Card(suits[2], 'Jack')]
@@ -94,24 +96,22 @@ class DeckTestCase(unittest.TestCase):
     def test_21_or_less_is_valid_hand(self):
         poss_scores = [i for i in range(1, 20)]
         hand = Hand(self.deck, 'alice')
-        checked = []
         for j, score in enumerate(poss_scores):
             hand.cards = [Card(suits[0], 1), Card(suits[1], score)]
-            checked.append(check_twenty_one(hand))
-            if checked[j] == 'blackjack' or 21:
-                checked[j] = False
-        self.assertFalse(any(checked))
+            check = check_twenty_one(hand)
+            if check == 'blackjack' or check == 21:
+                check = False
+            with self.subTest(score=score):
+                self.assertFalse(check)
 
     def test_22_or_more_invalid_hand_bust(self):
         poss_scores = [i for i in range(2, 19)]
         hand = Hand(self.deck, 'jane')
-        bust = True
         for j, score in enumerate(poss_scores):
             hand.cards = [Card(suits[0], 10), Card(suits[0], 10), Card(suits[1], score)]
-            checked = check_twenty_one(hand)
-            if checked != 'bust':
-                bust = False
-        self.assertTrue(bust)
+            check = check_twenty_one(hand)
+            with self.subTest(score=score):
+                self.assertIs(check, 'bust')
 
     def test_king_and_ace_equals_blackjack(self):
         hand = Hand(self.deck, 'bri')
