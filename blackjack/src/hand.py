@@ -4,11 +4,10 @@ pads = '|' + ' '*12 + '|'
 bottom = '\\____________/'
 
 class Hand:
-	def __init__(self, deck, player, person_type='player'):
+	def __init__(self, deck, dealer=False):
 		self.cards = deck.draw(2)
-		self.player = player  #this will be player name like 'dealer', 'player1'
 		# TODO take user input for value of 'player'
-		self.person = person_type
+		self.dealer = dealer
 		self.state = 'draw' #records blackjack, twenty-one, bust
 		self.success = 'tbd'
 
@@ -26,12 +25,13 @@ class Hand:
 
 
 	def get_total(self):
+#		print([card.value for card in self.cards])
 		return sum([card.value for card in self.cards])
 
 	def get_card_count(self):
 		return len(self.cards)
 
-	# TODO: dealer hits, not hand
+	# Keeping hit as a hand method, so game can be extended for multiple hands
 	def hit(self, deck):
 		self.state = 'playing'
 		self.cards += deck.draw()

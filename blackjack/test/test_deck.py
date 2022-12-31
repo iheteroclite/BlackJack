@@ -1,6 +1,7 @@
 import unittest
 from src.deck import Deck, Card, suits, faces
 from src.hand import Hand
+from src.people import Player
 from blackjack import check_twenty_one
 #python3 -m unittest discover test
 
@@ -27,13 +28,13 @@ class DeckTestCase(unittest.TestCase):
         num_players = 4
         for i in range(num_players):
             player_str = f'Player {i + 1}'
-            hand = Hand(self.deck, player_str, 'player')
+            player = Player(self.deck, player_str)
             with self.subTest(player=player_str):
-                self.assertEqual(hand.player, player_str)
+                self.assertEqual(player.name, player_str)
 
     def test_number_deck_cards_after_draws(self):
         num_players = 2
-        hands = [Hand(self.deck, f'P{x}', 'player') for x in range(num_players)]
+        hands = [Hand(self.deck) for x in range(num_players)]
         self.deck.draw()
         self.assertEqual(len(self.deck.cards), 47)
 
@@ -77,7 +78,7 @@ class DeckTestCase(unittest.TestCase):
         self.assertEqual(truth, [4]*3)
 
     def test_receive_1_card_when_hit(self):
-        my_hand = Hand(self.deck, 'bob')
+        my_hand = Hand(self.deck)
         old_hand_len = len(my_hand.cards)
         my_hand.hit(self.deck)
         self.assertEqual(len(my_hand.cards), (old_hand_len + 1))
@@ -85,7 +86,7 @@ class DeckTestCase(unittest.TestCase):
     def test_score_updated_correctly_when_receive_card(self):
         '''This program calulates score after the dealer's turn
         so this tests the function of hand.get_score() to calculate score '''
-        hand = Hand(self.deck, 'jim')
+        hand = Hand(self.deck)
         initial_score = hand.get_total()
 
         hand.cards += [ Card(suits[2], 7)]
@@ -95,7 +96,7 @@ class DeckTestCase(unittest.TestCase):
 
     def test_21_or_less_is_valid_hand(self):
         poss_scores = [i for i in range(1, 20)]
-        hand = Hand(self.deck, 'alice')
+        hand = Hand(self.deck)
         for j, score in enumerate(poss_scores):
             hand.cards = [Card(suits[0], 1), Card(suits[1], score)]
             check = check_twenty_one(hand)
@@ -106,7 +107,7 @@ class DeckTestCase(unittest.TestCase):
 
     def test_22_or_more_invalid_hand_bust(self):
         poss_scores = [i for i in range(2, 19)]
-        hand = Hand(self.deck, 'jane')
+        hand = Hand(self.deck)
         for j, score in enumerate(poss_scores):
             hand.cards = [Card(suits[0], 10), Card(suits[0], 10), Card(suits[1], score)]
             check = check_twenty_one(hand)
@@ -114,13 +115,13 @@ class DeckTestCase(unittest.TestCase):
                 self.assertIs(check, 'bust')
 
     def test_king_and_ace_equals_blackjack(self):
-        hand = Hand(self.deck, 'bri')
+        hand = Hand(self.deck)
         hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Ace')]
         score = check_twenty_one(hand)
         self.assertEqual(score, 'blackjack')
 
     def test_king_queen_ace_equals_21(self):
-        hand = Hand(self.deck, 'tom')
+        hand = Hand(self.deck)
         hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Queen'), Card(suits[0], 'Ace', 1)]
         hand.state = 'playing'
         score = check_twenty_one(hand)
@@ -128,7 +129,7 @@ class DeckTestCase(unittest.TestCase):
 
     def test_nine_ace_ace_equals_21(self):
         '''Assumes the program accurately sets the ace value '''
-        hand = Hand(self.deck, 'zoe')
+        hand = Hand(self.deck)
         hand.cards = [Card(suits[0], 9), Card(suits[0], 'Ace'), Card(suits[0], 'Ace', 1)]
         hand.state = 'playing'
         score = check_twenty_one(hand)
