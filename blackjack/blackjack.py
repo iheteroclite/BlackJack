@@ -24,7 +24,22 @@ def play():
     players = [Player(deck, f'Player {x + 1}') for x in range(num_players)]
     players.append(dealer)
 
-    # Players' turns
+    # Play as many rounds as the player wants
+    while True: # Emulating a do-while loop
+        round(dealer, players, deck, ace_value, player_ace)
+        options = ['Play Another Round', 'Leave the Table']
+        if player_choice(options=options) == options[0]:
+            # TODO*: reset the deck, reset player hands, and player state
+            continue
+        else:
+            # TODO*: Print user score tallies
+            # Make a lambda function in class People, and pass the different
+            # strings for Dealer and Player to the printout
+            break
+
+
+def round(dealer, players, deck, ace_value, player_ace):
+        # Players' turns
     for player in players:
         # alert which player's turn
         print (f"{player.name.upper()}'S TURN!!")
@@ -70,16 +85,14 @@ def play():
             else:
                 break
 
+    # Final score
     print(f"The dealer's score is: {dealer.hand.state}")
 
-    # Final score
-    for player in players[:-1]:  #bust, a total, blackjack, surrender
+    for player in players[:-1]:  #bust, a total, blackjack, or surrender
         success = score_hand(player.hand, dealer.hand)
         print(f"{player.name} scored {player.hand.state}, {success.upper()}S")
+    # TODO*: player wins/lossess are tallied
 
-
-    # TODO: make a player class, and have a player who can play again
-    # player gets a new hand, but their wins/lossess are tallied
 
 def score_hand(hand, dealer_hand):
     # Player always loses if they bust or surrender

@@ -18,3 +18,4 @@ class Dealer(People):
 	def __init__(self, deck, name="Dealer"):
 		super().__init__(deck, name)
 		self.hand.dealer = True
+		self.games = 0
