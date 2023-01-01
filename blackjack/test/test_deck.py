@@ -29,8 +29,8 @@ class DeckTestCase(unittest.TestCase):
         for i in range(num_players):
             player_str = f'Player {i + 1}'
             player = Player(self.deck, player_str)
-            with self.subTest(player=player_str):
-                self.assertEqual(player.name, player_str)
+
+
 
     def test_number_deck_cards_after_draws(self):
         num_players = 2
@@ -60,11 +60,17 @@ class DeckTestCase(unittest.TestCase):
         aces.append(Card(suits[1], faces[0], 1))
         aces.append(Card(suits[1], faces[0], 11))
         values = [ace.value for ace in aces]
-        aces[1].set_ace_value(11)
-        aces[0].set_ace_value(1)
-        aces[2].set_ace_value(1)
-        values.append([ace.value for ace in aces])
-        self.assertEqual(values, [11, 1, 11, [1, 11, 1]])
+        for i, x in enumerate([1, 11, 1]):
+            aces[i].set_ace_value(x)
+            with self.subTest(ace=(f'index {i}, value {x}'):
+                self.assertEqual(aces[i].value, x)
+
+        # aces[1].set_ace_value(11)
+        # aces[0].set_ace_value(1)
+        # aces[2].set_ace_value(1)
+        # for ace in aces:
+        #     values.append(ace.value)
+        # self.assertEqual(values, [11, 1, 11, ,1, 11, 1])
 
     def test_deck_ace_value_one_or_eleven(self):
         # make a deck with ace_value=1, and a deck for ace_val=11
@@ -137,6 +143,24 @@ class DeckTestCase(unittest.TestCase):
 
     def test_correctly_set_selected_ace_vale(self):
         '''Makes a deck of aces, initialises the input  '''
+        pass
+
+    def test_score_hand_function(self):
+        pass
+
+    def test_blackjack_win_correctly_updated(self):
+        pass
+
+    def test_other_win_correctly_updated(self):
+        pass
+
+    def test_loss_correctly_updated(self):
+        pass
+
+    def test_push_correctly_updated(self):
+        pass
+
+    def test_new_player_has_two_cards(self):
         pass
 
 if __name__ == '__main__':

@@ -6,13 +6,18 @@ class People:
 		self.hand = self.hands[0]
 		# In the case of the dealer, these counts all player's wins
 		self.blackjack_wins = 0
-		self.even_wins = 0
+		self.wins = 0
 		self.losses = 0
 		self.pushes = 0
+
+	def reset(self, deck):
+		self.hands = [Hand(deck)]
+		self.hand = self.hands[0]
 
 class Player(People):
 	def __init__(self, deck, name):
 		super().__init__(deck, name)
+		#super().reset()
 
 class Dealer(People):
 	def __init__(self, deck, name="Dealer"):
