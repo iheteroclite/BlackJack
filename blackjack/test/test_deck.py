@@ -62,15 +62,8 @@ class DeckTestCase(unittest.TestCase):
         values = [ace.value for ace in aces]
         for i, x in enumerate([1, 11, 1]):
             aces[i].set_ace_value(x)
-            with self.subTest(ace=(f'index {i}, value {x}'):
+            with self.subTest(ace=(f'index {i}, value {x}')):
                 self.assertEqual(aces[i].value, x)
-
-        # aces[1].set_ace_value(11)
-        # aces[0].set_ace_value(1)
-        # aces[2].set_ace_value(1)
-        # for ace in aces:
-        #     values.append(ace.value)
-        # self.assertEqual(values, [11, 1, 11, ,1, 11, 1])
 
     def test_deck_ace_value_one_or_eleven(self):
         # make a deck with ace_value=1, and a deck for ace_val=11

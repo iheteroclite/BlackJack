@@ -21,28 +21,27 @@ def play():
 
     # Initialise Players and Dealer
     # TODO: could add an option to load player save from file?
-    dealer = Dealer(deck)
+    dealer = Dealer(num_players, deck)
     players = [Player(deck, f'Player {x + 1}') for x in range(num_players)]
     players.append(dealer)
 
     # Play as many rounds as the player wants
     while True: # Emulating a do-while loop
         round(dealer, players, deck, ace_value, player_ace)
-
-        # Print totals now
+        # TODO*: Print user score tallies
+        # Make a lambda function in class People, and pass the different
+        # strings for Dealer and Player to the printout
+        for player in players:
+            print(player)
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:
             deck = Deck(num_decks, ace=ace_value if ace_value==1 else 11)
             for player in players:
                 player.reset(deck)
                 player.hand.state = 'draw'
-            # TODO*: reset the deck, reset player hands, and player state
-            # have this resetting as a method on the Dealer and Player?
-            continue
+            #continue
         else:
-            # TODO*: Print user score tallies
-            # Make a lambda function in class People, and pass the different
-            # strings for Dealer and Player to the printout
+
             break
 
 
@@ -100,7 +99,9 @@ def round(dealer, players, deck, ace_value, player_ace):
         success = score_hand(player, dealer)
         print(f"{player.name} scored {player.hand.state}, {success.upper()}")
     # TODO*: player wins/lossess are tallied
+    dealer.games += 1
 
+#TODO*: don't shuffle every single time we're at the table,
 
 def score_hand(player, dealer):
     # TODO: check bet payout rate when dealer busts and player gets natural blackjack
@@ -109,36 +110,47 @@ def score_hand(player, dealer):
     dealer_score = dealer.hand.state
     word = 'losses'
     # Player always loses if they bust or surrender
-    if score in ('bust', 'surrender'):
-        player.hand.success = -1
-    # If player is not bust, and dealer busts, player wins
-    elif dealer_score == 'bust':
-        player.hand.success = 1
-        word = 'wins'
-    # Push if there's a tie
-    elif score == dealer_score:
-        player.hand.success = 0
-        word = 'pushes'
-    # BlackJack trumps all other hands
-    # Dealer blackjack wins (unless player has blackjack)
-    elif dealer_score == 'blackjack':
-        player.hand.success = -1
-    elif score == 'blackjack':
-        player.hand.success = 1
-        word = 'blackjack_wins'
-    # If there's no other condition, highest score wins
-    elif score > dealer_score:
-        player.hand.success = 1
-        word = 'wins'
-    else:
-        hand.success = -1
+    # if score in ('bust', 'surrender'):
+    #     pass    # Player loses
+    # # If player is not bust, and dealer busts, player wins
+    # elif dealer_score == 'bust':
+    #     word = 'blackjack_wins' if score == 'blackjack' else 'even_wins'
+    # # Push if there's a tie
+    # elif score == dealer_score:
+    #     word = 'pushes'
+    # # BlackJack trumps all other hands
+    # # Dealer blackjack wins (unless player has blackjack)
+    # elif dealer_score == 'blackjack':
+    #     pass
+    # elif score == 'blackjack':
+    #     word = 'blackjack_wins'
+    # # If there's no other condition, highest score wins
+    # elif score > dealer_score:
+    #     word = 'even_wins'
+
+    if score not in ('bust', 'surrender'):
+        # If player is not bust, and dealer busts, player wins
+        if dealer_score == 'bust':
+            word = 'blackjack_wins' if score == 'blackjack' else 'even_wins'
+        # Push if there's a tie
+        elif score == dealer_score:
+            word = 'pushes'
+        # BlackJack trumps all other hands
+        # Dealer blackjack wins (unless player has blackjack)
+        elif dealer_score != 'blackjack':
+            if score == 'blackjack':
+                word = 'blackjack_wins'
+            # If there's no other condition, highest score wins
+            elif score > dealer_score:
+                word = 'even_wins'
 
     # Update player & dealer wins, losses and games counters
     setattr(player, word, getattr(player, word) + 1)
     setattr(dealer, word, getattr(dealer, word) + 1)
-    dealer.games += 1
+    player.games += 1
 
-    return 'loses' if word == 'losses' else word
+    #TODO*: word = even_wins should be wins
+    return 'loses' if word == 'losses' else ' '.join(word.split('_')[::-1])
 
 # TODO: 'Select value of ' or {} format strings
 def player_choice(msg="", i=0, options = ['hit', 'stand', 'surrender'], player=False,):
