@@ -1,5 +1,7 @@
 from src.hand import Hand
 class People:
+	"""SuperClass the Player and Dealer SubClasses."""
+
 	def __init__(self, deck, name):
 		self.name = name
 		self.hands = [Hand(deck)]	# List of player hands
@@ -25,6 +27,11 @@ class People:
 
 
 class Player(People):
+	"""Players are users.
+
+	Player extends the People superclass.
+	"""
+
 	def __init__(self, deck, name):
 		super().__init__(deck, name)
 
@@ -33,6 +40,13 @@ class Player(People):
 
 
 class Dealer(People):
+	r"""Dealer is an automated Dealer
+
+	Dealer extends the People superclass.
+	An instance of Dealer counts all even or blackjack wins, \
+	pushes and losses of every player at the table as a tally.
+	"""
+
 	def __init__(self, num_players, deck, name="Dealer"):
 		super().__init__(deck, name)
 		self.hand.dealer = True

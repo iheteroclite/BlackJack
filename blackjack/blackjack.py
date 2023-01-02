@@ -41,7 +41,6 @@ def play():
                 player.hand.state = 'draw'
             #continue
         else:
-
             break
 
 
