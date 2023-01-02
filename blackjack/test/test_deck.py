@@ -1,28 +1,43 @@
-"""Tests to ensure specification compliance and test functionality."""
+"""Tests to ensure specification compliance and test functionality.
 
-__version__ = 0.34
+To run cli tests: $ python3 -m unittest discover test
+"""
+
+__version__ = 0.36
 __author__ = 'iheteroclite'
 
 import unittest
 import pycodestyle
+import random
 
 from src.deck import Deck, Card, suits, faces
 from src.hand import Hand
 from src.people import Player, Dealer
+from library.statistics import chance_of_blackjack_totals
+from library.statistics import chance_with_fixed_percentage
+from library.statistics import chance_of_natural_blackjack
 from blackjack import check_twenty_one, score_hand
+
 
 class TestCodeFormat(unittest.TestCase):
 
     def test_conformance(self):
-        """Test conformity to PEP-8."""
+        r"""Test conformity to PEP-8.
+
+        'E722' (bare except) ignored as this use case is in python3 docs
+        'W503' (line break before binary operator) ignored as recent (2022)
+        PEG-8 style guide prescribes avoidance of backslash \ for line
+        continuation, and now allows/suggests mathematical long addition format
+        """
         style = pycodestyle.StyleGuide(quiet=False, ignore=['E722', 'W503'])
         result = style.check_files(['blackjack.py', 'src/hand.py',
-                                    'src/deck.py', 'src/people.py'])
+                                    'src/deck.py', 'library/statistics.py',
+                                    'test/test_deck.py', 'src/people.py'])
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
 
+
 class DeckTestCase(unittest.TestCase):
-    """To run cli tests: $ python3 -m unittest discover test"""
 
     def setUp(self):  # this method will be run before each test
         self.deck = Deck()
@@ -32,14 +47,14 @@ class DeckTestCase(unittest.TestCase):
         pass
 
     def test_number_of_cards(self):
-        #TODO*: change this to vary num_decks from 1 to 8
+        # TODO*: change this to vary num_decks from 1 to 8
         number_of_cards = len(self.deck.cards)
         # check there's up to 8 decks in the deck
-        self.assertTrue(number_of_cards in [52*n for n in range(8)])
+        self.assertTrue(number_of_cards in [52 * n for n in range(8)])
 
     def test_cards_integer_value(self):
         for card in self.deck.cards:
-            with self.subTest(fail_card = f"{card.suit}, {card.face}"):
+            with self.subTest(fail_card=f"{card.suit}, {card.face}"):
                 self.assertTrue((1 <= card.value <= 11)
                                 and (card.value % 1 == 0))
 
@@ -56,23 +71,23 @@ class DeckTestCase(unittest.TestCase):
         self.assertEqual(len(self.deck.cards), 47)
 
     def test_number_card_worth_its_value(self):
-        card_values = [Card(suits[0], face=x).value for x in range(2,10)]
+        card_values = [Card(suits[0], face=x).value for x in range(2, 10)]
         self.assertEqual(card_values, [2, 3, 4, 5, 6, 7, 8, 9])
 
     def test_king_queen_jack_worth_ten(self):
         card_values = [Card(suits[1], face).value for face in faces[10:]]
-        self.assertEqual(card_values, [10]*3)
+        self.assertEqual(card_values, [10] * 3)
 
     def test_suit_inconsequential_to_face(self):
-       suit_list = [Card(suits[0], face).face
-                    for suit in suits for face in faces]
-       self.assertEqual(suit_list, faces*4)
+        suit_list = [Card(suits[0], face).face
+                     for suit in suits for face in faces]
+        self.assertEqual(suit_list, faces * 4)
 
     def test_suit_inconsequential_to_value(self):
-       suit_list = [Card(suits[0], face).value
-                    for suit in suits for face in faces]
-       self.assertEqual(suit_list,
-                        [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]*4 )
+        suit_list = [Card(suits[0], face).value
+                     for suit in suits for face in faces]
+        self.assertEqual(suit_list,
+                         [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] * 4)
 
     def test_card_ace_value_one_or_eleven(self):
         # TODO: make this use subTest
@@ -88,14 +103,14 @@ class DeckTestCase(unittest.TestCase):
     def test_deck_ace_value_one_or_eleven(self):
         # make a deck with ace_value=1, and a deck for ace_val=11
         # test they have correct ace values
-        truth = [0]*3
+        truth = [0] * 3
         values = [11, 1, 11]
         decks = [Deck(), Deck(1, values[1]), Deck(1, values[2])]
         for i, deck in enumerate(decks):
             for card in deck.cards:
                 truth[i] += 1 if (card.face == 'Ace'
-                            and card.value == values[i]) else 0
-        self.assertEqual(truth, [4]*3)
+                                  and card.value == values[i]) else 0
+        self.assertEqual(truth, [4] * 3)
 
     def test_receive_1_card_when_hit(self):
         my_hand = Hand(self.deck)
@@ -111,10 +126,10 @@ class DeckTestCase(unittest.TestCase):
         hand = Hand(self.deck)
         initial_score = hand.get_total()
 
-        hand.cards += [ Card(suits[2], 7)]
+        hand.cards += [Card(suits[2], 7)]
         first_score = hand.get_total()
         hand.cards += [Card(suits[2], 'Jack')]
-        self.assertEqual(hand.get_total(), (first_score + 10) )
+        self.assertEqual(hand.get_total(), (first_score + 10))
 
     def test_21_or_less_is_valid_hand(self):
         poss_scores = [i for i in range(1, 20)]
@@ -162,9 +177,8 @@ class DeckTestCase(unittest.TestCase):
 
     def test_correctly_set_selected_ace_vale(self):
         """Make a deck of aces, then test its value is 52 when ace is 1."""
-        self.deck.cards = [Card(suits[0],faces[0], 1)]*52
+        self.deck.cards = [Card(suits[0], faces[0], 1)] * 52
         self.assertEqual(sum([card.value for card in self.deck.cards]), 52)
-
 
     def test_win_loss_blackjack_push_updated(self):
         """Test that the player's score tallies are updated.
@@ -175,10 +189,10 @@ class DeckTestCase(unittest.TestCase):
         case[1] = dealer score
         case[2] = result
         """
-        cases = [['blackjack', '17', 'blackjack_wins'], \
-            [21, 17, 'even_wins'], \
-            [17, 21, 'losses'], \
-            [18, 18, 'pushes']]
+        cases = [['blackjack', '17', 'blackjack_wins'],
+                 [21, 17, 'even_wins'],
+                 [17, 21, 'losses'],
+                 [18, 18, 'pushes']]
         player = Player(self.deck, 'player')
         dealer = Dealer(1, self.deck, 'dealer')
         for case in cases:
@@ -222,6 +236,62 @@ class DeckTestCase(unittest.TestCase):
             dealer.hand.state = test[1]
             with self.subTest(player=test[0], dealer=test[1]):
                 self.assertEqual(test[2], score_hand(player, dealer))
+
+
+class StatisticsTestCase(unittest.TestCase):
+
+    def setUp(self):  # this method will be run before each test
+        pass
+
+    def tearDown(self):  # this method will be run after each tests
+        pass
+
+    def test_chance_of_blackjack_totals_less_than_tenth(self):
+        """Check maximum input probability is not exceeded."""
+        probs = range(1, 10, 1)
+        results = [{
+                   'probability': prob / 100,
+                   'blackjack': random.getrandbits(1)
+                   } for prob in probs]
+        self.assertGreater(0.1, chance_of_blackjack_totals(results))
+
+    def test_chance_of_blackjack_totals_greater_than_zero(self):
+        probs = range(1, 10, 1)
+        results = [{
+                   'probability': prob / 100,
+                   'blackjack': random.getrandbits(1),
+                   } for prob in probs]
+        self.assertGreater(chance_of_blackjack_totals(results), 0)
+
+    def test_chance_with_fixed_percentage_calculation(self):
+        """Test the formula for calculating chance using a fixed percentage."""
+        even = chance_with_fixed_percentage(wins=5, rounds=10, expected=0.5)
+        self.assertAlmostEqual(even, 0.24609374)
+
+    def test_chance_with_fixed_percentage_zero(self):
+        """Check if expected percentage is 0%, the chance of 50% wins is 0."""
+        zero = chance_with_fixed_percentage(wins=5, rounds=10, expected=0)
+        self.assertEqual(zero, 0)
+
+    def test_chance_of_natural_blackjack_zero_no_aces(self):
+        """Check chance of blackjack for deck without aces is 0."""
+        deck = Deck()
+        deck.cards = [Card('♣', random.randrange(2, 10)) for x in range(52)]
+        self.assertEqual(0, chance_of_natural_blackjack(deck=deck))
+
+    def test_chance_of_natural_blackjack_zero_no_tens(self):
+        """Check chance of blackjack for deck without aces is 0."""
+        deck = Deck()
+        deck.cards = [Card('♣', random.randrange(2, 9)) for x in range(52)]
+        # Add an ace:
+        deck.cards.append(Card('♣', faces[0]))
+        self.assertEqual(0, chance_of_natural_blackjack(deck=deck))
+
+    def test_chance_of_natural_blackjack_four_point_eight(self):
+        """Check the chance of blackjack for newly shuffled deck is 4.8%."""
+        deck = Deck()
+        self.assertEqual(0.048, round(chance_of_natural_blackjack(deck), 3))
+
 
 if __name__ == '__main__':
     unittest.main()

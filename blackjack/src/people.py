@@ -1,4 +1,4 @@
-__version__ = 0.34
+__version__ = 0.36
 __author__ = 'iheteroclite'
 
 from src.hand import Hand
@@ -9,14 +9,14 @@ class People:
 
     def __init__(self, deck, name):
         self.name = name
-        self.hands = [Hand(deck)]   # List of player hands
-        self.hand = self.hands[0]   # Current hand in play
+        self.hands = [Hand(deck)]  # List of player hands
+        self.hand = self.hands[0]  # Current hand in play
         # In the case of the dealer, these count all player's wins
         self.blackjack_wins = 0
         self.even_wins = 0
-        self.losses = 0             # Includes bust, surrender, and loss
+        self.losses = 0            # Includes bust, surrender, and loss
         self.pushes = 0
-        self.games = 0              # Number of rounds played
+        self.games = 0             # Number of rounds played
 
     def reset(self, deck):
         self.hands = [Hand(deck)]
@@ -24,8 +24,8 @@ class People:
 
     def print_str(self, name_str, person, multiple):
         wins = self.blackjack_wins + self.even_wins
-        return ('_'*52 + f'\n{name_str}, over {self.games} rounds {person}:\n'
-                + f'Wins: {wins} '
+        return ('_' * 52 + f'\n{name_str}, over {self.games} rounds {person}:'
+                + f'\nWins: {wins} '
                 + f'({round(100*wins/(self.games*multiple), 1)}%) with '
                 + f'{self.blackjack_wins} blackjack and '
                 + f'{self.even_wins} even payouts \n'

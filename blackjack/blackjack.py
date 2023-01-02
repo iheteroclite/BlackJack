@@ -1,4 +1,4 @@
-__version__ = 0.34
+__version__ = 0.36
 __author__ = 'iheteroclite'
 
 import inquirer
@@ -10,7 +10,7 @@ from src.people import Dealer, Player
 
 def play():
     # Setup number of players and ace value
-    num_players = player_choice("players", 1, [n+1 for n in range(5)])
+    num_players = player_choice("players", 1, [n + 1 for n in range(5)])
     print('Number of players selected was:', num_players)
     player_ace = 'Player chooses'
     ace_qn = "Select the value of player's Aces"
@@ -19,7 +19,7 @@ def play():
     # Make a deck
     # min_decks ensures there's at least 1 deck per 4 players
     min_decks = 2 if num_players > 4 else 1
-    num_decks = player_choice("decks", 1, [n+min_decks for n in range(8)])
+    num_decks = player_choice("decks", 1, [n + min_decks for n in range(8)])
     print('Number of decks selected was:', num_decks)
     deck = Deck(num_decks, ace=ace_value if ace_value == 1 else 11)
 
@@ -37,7 +37,9 @@ def play():
             print(player)
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:
-            deck = Deck(num_decks, ace=ace_value if ace_value == 1 else 11)
+            # TODO*: if deck has less than minimum cards, reshuffle
+            if len(deck.cards) < (min_decks * 52):
+                deck = Deck(num_decks, ace=ace_value if ace_value == 1 else 11)
             for player in players:
                 player.reset(deck)
                 player.hand.state = 'draw'
@@ -159,9 +161,8 @@ def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
                 ordinal = ('st' if i == 1 else 'nd' if i == 2
                            else 'rd' if i == 3 else 'th')
                 val_qn = f"Your {i}{ordinal} card is an Ace. Select its value"
-
-                if hand.dealer or (ace_choice and
-                                   player_choice(val_qn, 3, [1, 11]) == 1):
+                ace_is_1 = player_choice(val_qn, 3, [1, 11]) == 1
+                if hand.dealer or (ace_choice and ace_is_1):
                     card.set_ace_value(1)
                     if hand.get_total() <= 21:   # re-check after changing ace
                         return check_twenty_one(hand)

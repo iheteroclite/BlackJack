@@ -1,4 +1,4 @@
-__version__ = 0.34
+__version__ = 0.36
 __author__ = 'iheteroclite'
 
 top = ' ____________ '
@@ -24,7 +24,7 @@ class Hand:
             faces_str += '|' + card.face.center(12) + '|'
             suits_two += f'|  {card.suit}     {card.suit}   |'
             suits_str += f'|     {card.suit}      |'
-        return '\n'.join([top*tot, pads_top * tot, faces_str, pads * tot,
+        return '\n'.join([top * tot, pads_top * tot, faces_str, pads * tot,
                           suits_two, pads * tot, suits_str, bottom * tot])
 
     def get_total(self):

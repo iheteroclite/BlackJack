@@ -1,4 +1,4 @@
-__version__ = 0.34
+__version__ = 0.36
 __author__ = 'iheteroclite'
 
 from random import shuffle
@@ -30,14 +30,14 @@ class Card:
 
 
 class Deck:
-    def __init__(self, num_decks=1, ace=11):
-        if num_decks > 8:
-            num_decks = 8
-        self.cards = [Card(s, f, ace) for s in suits for f in faces]*num_decks
+    def __init__(self, n_decks=1, ace=11):
+        if n_decks > 8:
+            n_decks = 8
+        self.cards = [Card(s, f, ace) for s in suits for f in faces] * n_decks
         self.shuffle_deck()
 
     def shuffle_deck(self):
         shuffle(self.cards)
 
-    def draw(self, num_cards=1):
-        return [self.cards.pop(0) for c in range(num_cards)]
+    def draw(self, n_cards=1):
+        return [self.cards.pop(0) for c in range(n_cards)]
