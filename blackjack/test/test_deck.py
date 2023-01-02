@@ -1,11 +1,28 @@
+"""Tests to ensure specification compliance and test functionality."""
+
+__version__ = 0.34
+__author__ = 'iheteroclite'
+
 import unittest
+import pycodestyle
+
 from src.deck import Deck, Card, suits, faces
 from src.hand import Hand
 from src.people import Player, Dealer
 from blackjack import check_twenty_one, score_hand
-#python3 -m unittest discover test
+
+class TestCodeFormat(unittest.TestCase):
+
+    def test_conformance(self):
+        """Test conformity to PEP-8."""
+        style = pycodestyle.StyleGuide(quiet=False, ignore=['E722', 'W503'])
+        result = style.check_files(['blackjack.py', 'src/hand.py',
+                                    'src/deck.py', 'src/people.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
 
 class DeckTestCase(unittest.TestCase):
+    """To run cli tests: $ python3 -m unittest discover test"""
 
     def setUp(self):  # this method will be run before each test
         self.deck = Deck()
@@ -179,7 +196,7 @@ class DeckTestCase(unittest.TestCase):
     def test_player_win_lose_conditions(self):
         """Test the accuracy of game scoring.
 
-        Check the following:
+        Run the following tests:
         -- dealer blackjack beats player 21
         -- dealer bust beats player bust
         -- player blackjack ties dealer blackjack

@@ -1,7 +1,11 @@
-import random
+__version__ = 0.34
+__author__ = 'iheteroclite'
+
+from random import shuffle
 
 suits = ['\033[91m♦\033[00m', '♣', '\033[91m♥\033[00m', '♠']
-faces = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King']
+faces = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+         'Jack', 'Queen', 'King']
 
 
 class Card:
@@ -24,6 +28,7 @@ class Card:
     def set_ace_value(self, ace_value):
         self.value = ace_value
 
+
 class Deck:
     def __init__(self, num_decks=1, ace=11):
         if num_decks > 8:
@@ -32,10 +37,7 @@ class Deck:
         self.shuffle_deck()
 
     def shuffle_deck(self):
-        random.shuffle(self.cards)
+        shuffle(self.cards)
 
     def draw(self, num_cards=1):
         return [self.cards.pop(0) for c in range(num_cards)]
-
-
-
