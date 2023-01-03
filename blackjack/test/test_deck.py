@@ -14,7 +14,7 @@ from src.deck import Deck, Card, suits, faces
 from src.hand import Hand
 from src.people import Player, Dealer
 from library.statistics import chance_of_blackjack_totals
-from library.statistics import chance_with_fixed_percentage
+from library.statistics import chance_with_fixed_percent
 from library.statistics import chance_of_natural_blackjack
 from blackjack import check_twenty_one, score_hand
 
@@ -263,14 +263,14 @@ class StatisticsTestCase(unittest.TestCase):
                    } for prob in probs]
         self.assertGreater(chance_of_blackjack_totals(results), 0)
 
-    def test_chance_with_fixed_percentage_calculation(self):
+    def test_chance_with_fixed_percent_calculation(self):
         """Test the formula for calculating chance using a fixed percentage."""
-        even = chance_with_fixed_percentage(wins=5, rounds=10, expected=0.5)
+        even = chance_with_fixed_percent(wins=5, rounds=10, expected=0.5)
         self.assertAlmostEqual(even, 0.24609374)
 
-    def test_chance_with_fixed_percentage_zero(self):
+    def test_chance_with_fixed_percent_zero(self):
         """Check if expected percentage is 0%, the chance of 50% wins is 0."""
-        zero = chance_with_fixed_percentage(wins=5, rounds=10, expected=0)
+        zero = chance_with_fixed_percent(wins=5, rounds=10, expected=0)
         self.assertEqual(zero, 0)
 
     def test_chance_of_natural_blackjack_zero_no_aces(self):
@@ -289,8 +289,12 @@ class StatisticsTestCase(unittest.TestCase):
 
     def test_chance_of_natural_blackjack_four_point_eight(self):
         """Check the chance of blackjack for newly shuffled deck is 4.8%."""
-        deck = Deck()
-        self.assertEqual(0.048, round(chance_of_natural_blackjack(deck), 3))
+        probs = [0.047, 0.048]
+        for n in range(1, 8):
+            deck = Deck(n)
+            with self.subTest(n_decks=n):
+                chance = round(chance_of_natural_blackjack(deck), 3)
+                self.assertTrue(chance in probs)
 
 
 if __name__ == '__main__':

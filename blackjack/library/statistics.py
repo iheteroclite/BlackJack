@@ -97,7 +97,7 @@ def chance_of_natural_blackjack(deck):
     return prob_draw_ace * prob_draw_ten * 2
 
 
-def chance_with_fixed_percentage(wins, rounds, expected):
+def chance_with_fixed_percent(wins, rounds, expected=0.3742):
     """Calculate chance of wins after games with expected probability.
 
     Arguments:
@@ -109,8 +109,23 @@ def chance_with_fixed_percentage(wins, rounds, expected):
     (wins) that the player has. Even wins means a win that pays out at even
     odds (1:2), so any win that is not a natural/blackjack.
 
+    The default expected probability is for even wins, taken as a standard
+    0.4222 chance of winning, minus 0.048 chance of getting blackjack, so:
+    chance_win - chance_blackjack = chance_even_odds_win
+
     Can be used to determine chance of push, win etc, where there is an
-    approximate fixed expected change of that result (win/push)
+    approximate fixed expected change of that result (win/push).
     """
     prob_loss = (1 - expected)**(rounds - wins)
     return expected**wins * prob_loss * comb(rounds, wins)
+
+
+def caught(player):
+    """Check if the player has been caught (or assumed) cheating.
+
+    """
+    return False
+
+
+def punishment(player):
+    pass

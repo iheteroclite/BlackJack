@@ -6,6 +6,8 @@ import inquirer
 from src.deck import Deck
 from src.hand import Hand
 from src.people import Dealer, Player
+from library.statistics import caught
+from library.cheat import cheat_setup
 
 
 def play():
@@ -27,29 +29,38 @@ def play():
     # TODO: could add an option to load player save from file?
     dealer = Dealer(num_players, deck)
     players = [Player(deck, f'Player {x + 1}') for x in range(num_players)]
-    players.append(dealer)
+
+    # Check if player wants to cheat
+    cheat_setup(players)
 
     # Play as many rounds as the player wants (emulating a do-while loop)
     while True:
         round(dealer, players, deck, ace_value, player_ace)
 
         for player in players:
+            player.calculate_probability()
             print(player)
+            # Check if player has been caught cheating
+            caught(player)
+        print(dealer)
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:
-            # TODO*: if deck has less than minimum cards, reshuffle
+            # If deck has less than minimum cards, reshuffle
             if len(deck.cards) < (min_decks * 52):
-                deck = Deck(num_decks, ace=ace_value if ace_value == 1 else 11)
-            for player in players:
+                ace = ace_value if ace_value == 1 else 11
+                deck = Deck(num_decks, ace=ace)
+            for player in players + [dealer]:
                 player.reset(deck)
                 player.hand.state = 'draw'
         else:
+            # Leave the table (exit game)
             break
 
 
 def round(dealer, players, deck, ace_value, player_ace):
     # Players' turns
-    for player in players:
+    # TODO*: turn player into person here, for clarity
+    for player in players + [dealer]:
         # Alert which player's turn
         print(f"{player.name.upper()}'S TURN!!")
         if isinstance(player, Player):
@@ -77,8 +88,6 @@ def round(dealer, players, deck, ace_value, player_ace):
                     player_move = player_choice(player=player)
                 # elif hand.person == 'AI':
                     # TODO: add an option to have AI make choices
-                    # can modify dealer draw so they only draw to specific val
-                #    player_move = 'temp value'
                 else:
                     player_move = dealer_move(dealer.hand, 17)
 
@@ -98,13 +107,11 @@ def round(dealer, players, deck, ace_value, player_ace):
     # Final score
     print(f"The dealer's score is: {dealer.hand.state}")
 
-    for player in players[:-1]:
+    for player in players:
         # success is the win type (blackjack, even), loss, or push
         success = score_hand(player, dealer)
         print(f"{player.name} scored {player.hand.state}, {success.upper()}")
     dealer.games += 1
-
-# TODO*: don't shuffle every single time we're at the table,
 
 
 def score_hand(player, dealer):
@@ -124,6 +131,8 @@ def score_hand(player, dealer):
         elif dealer_score != 'blackjack':
             if score == 'blackjack':
                 word = 'blackjack_wins'
+                # Update blackjack tally for probability calculations
+                player.probabilities[-1]['blackjack'] = True
             # If there's no other condition, highest score wins
             elif score > dealer_score:
                 word = 'even_wins'
@@ -138,6 +147,7 @@ def score_hand(player, dealer):
 
 def player_choice(
         msg="", i=0, options=['hit', 'stand', 'surrender'], player=False,):
+    # TODO: tidy this
     bits = [", What do you do?", "Select number of ", " are you ready?", " "]
     questions = [inquirer.List('choice',
                  message=f'{player.name}{bits[i]}' if player

@@ -2,6 +2,8 @@ __version__ = 0.36
 __author__ = 'iheteroclite'
 
 from src.hand import Hand
+from library.statistics import chance_of_natural_blackjack
+from library.statistics import chance_with_fixed_percent
 
 
 class People:
@@ -22,14 +24,16 @@ class People:
         self.hands = [Hand(deck)]
         self.hand = self.hands[0]
 
-    def print_str(self, name_str, person, multiple):
+    def __str__(self, name, scored, multiple, bj_chance='', even_chance=''):
         wins = self.blackjack_wins + self.even_wins
-        return ('_' * 52 + f'\n{name_str}, over {self.games} rounds {person}:'
+
+        return ('_' * 52
+                + f'\n{name}, over {self.games} rounds {scored}:'
                 + f'\nWins: {wins} '
-                + f'({round(100*wins/(self.games*multiple), 1)}%) with '
-                + f'{self.blackjack_wins} blackjack and '
-                + f'{self.even_wins} even payouts \n'
-                + f'Losses: {self.losses}     Pushes: {self.pushes}')
+                + f'({round(100 * wins / (self.games * multiple), 1)} %) '
+                + f'with {self.blackjack_wins} blackjack {bj_chance}'
+                + f'and {self.even_wins} even payouts {even_chance}\n'
+                + f'Losses: {self.losses}       Pushes: {self.pushes}')
 
 
 class Player(People):
@@ -39,17 +43,61 @@ class Player(People):
     """
 
     def __init__(self, deck, name):
+        # Store the probability of getting blackjack for every round as dict:
+        # {
+        #     'probability' = 0.048,
+        #     'blackjack' = False
+        # }
+        # Calculate probability of blackjack BEFORE drawing cards
+        prob = chance_of_natural_blackjack(deck)
+        self.probabilities = [{
+            'probability': prob,
+            'blackjack': False
+        }]
         super().__init__(deck, name)
+        # Sleeve is the cards up a player's sleeve (for cheating)
+        self.sleeve = None
+        self.chance_bj = None
+        self.chance_even = None
 
     def __str__(self):
-        return self.print_str(self.name, 'you have scored', 1)
+        # Strings to add for displaying player probabilities
+        if self.chance_bj:
+            bj_perc = round((self.chance_bj * 100), 1)
+            bj = f'(at {bj_perc} % chance)' + '\n' + ' ' * 16
+        else:
+            bj = ''
+
+        if self.chance_even:
+            even_perc = round((self.chance_even * 100), 1)
+            even = f'(at {even_perc} % chance)'
+        else:
+            even = ''
+
+        return super().__str__(self.name, 'you have scored', 1, bj, even)
+
+    def reset(self, deck):
+        prob = chance_of_natural_blackjack(deck)
+        self.probabilities.append({
+            'probability': prob,
+            'blackjack': False
+        })
+        super().reset(deck)
+
+    def calculate_probability(self):
+        self.chance_bj = self.probabilities[-1]['probability']
+        self.chance_even = chance_with_fixed_percent(self.even_wins,
+                                                     self.games)
+
+    def hide_cards():
+        pass
 
 
 class Dealer(People):
     r"""Dealer is an automated Dealer
 
     Dealer extends the People superclass.
-    An instance of Dealer counts all even or blackjack wins, \
+    An instance of Dealer counts all even or blackjack wins,
     pushes and losses of every player at the table as a tally.
     """
 
@@ -59,5 +107,5 @@ class Dealer(People):
         self.num_players = num_players
 
     def __str__(self):
-        return self.print_str('All players', 'scored a total of',
-                              self.num_players)
+        return super().__str__('All players', 'scored a total of',
+                               self.num_players)
