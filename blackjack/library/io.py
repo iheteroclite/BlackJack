@@ -1,6 +1,7 @@
 """This library provides various input and output functions for blackjack."""
 
 import inquirer
+from os import get_terminal_size
 
 top = ' ____________ '
 pads_top = '/' + ' ' * 12 + '\\'
@@ -31,9 +32,8 @@ def player_choice(
     return inquirer.prompt(questions)['choice']
 
 def get_screen_height():
-    # TODO: actually get the screen height
-    return 20
-
+    size = get_terminal_size()
+    return size.columns - 15
 
 
 def welcome():

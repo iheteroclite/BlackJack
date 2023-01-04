@@ -29,6 +29,35 @@ def chance_of_being_caught_with_normal_dist(c_max, m, sd, w):
     chance = coef * (erf((w - m) / (sqrt(2) * sd)) - erf(m / (sqrt(2) * sd)))
     return chance
 
+# Statistics for blackjack wins, modelled as a binomeal distribution with a
+# variable percentage change of winning (which depends on the number of 10/Ace
+# in the deck, and number of previous blackjack wins)
+
+def chance_of_natural_blackjack(deck):
+    """Calculate the probability of getting blackjack from specific deck.
+
+    Using the formula:
+        aces   tens
+    P = ---- * ---- * 2
+         N      N-1
+    where:
+    aces = total number of aces in the deck
+    tens = total number of tens in the deck
+    N = total number of cards in the deck
+    """
+    cards = len(deck.cards)
+    aces = 0
+    tens = 0
+    for card in deck.cards:
+        if card.face == faces[0]:
+            aces += 1
+        elif card.value == 10:
+            tens += 1
+
+    prob_draw_ace = aces / cards
+    prob_draw_ten = tens / (cards - 1)
+
+    return prob_draw_ace * prob_draw_ten * 2
 
 def chance_of_blackjack_totals(results, at_least=False):
     """Calculate the chance of getting the results you have over every game.
@@ -113,32 +142,8 @@ def chance_at_least_blackjack_totals(deal_count, bj_count, bj_wins, not_bjs):
     return 1 - sum_chances
 
 
-def chance_of_natural_blackjack(deck):
-    """Calculate the probability of getting blackjack from specific deck.
-
-    Using the formula:
-        aces   tens
-    P = ---- * ---- * 2
-         N      N-1
-    where:
-    aces = total number of aces in the deck
-    tens = total number of tens in the deck
-    N = total number of cards in the deck
-    """
-    cards = len(deck.cards)
-    aces = 0
-    tens = 0
-    for card in deck.cards:
-        if card.face == faces[0]:
-            aces += 1
-        elif card.value == 10:
-            tens += 1
-
-    prob_draw_ace = aces / cards
-    prob_draw_ten = tens / (cards - 1)
-
-    return prob_draw_ace * prob_draw_ten * 2
-
+# Statistics for 'even odds' wins (not blackjack), modelled as a binomeal
+# distribution with a fixed chance of winning a round.
 
 def chance_with_fixed_percent(wins, rounds, prob_win=0.3742):
     """Calculate chance of wins after games with expected probability.
@@ -146,7 +151,16 @@ def chance_with_fixed_percent(wins, rounds, prob_win=0.3742):
     Arguments:
     -- wins = number of wins for a particular player or player group
     -- rounds = total number of rounds played by player(s)
-    -- prob_win = the fixed probability of getting a win
+    -- prob_win = the fixed probability of getting a single win
+
+    In a binomeal distribution, 1 - prob_win is the probability of a single
+    loss. The probability mass function is:
+
+                rounds
+    f(wins) = (  wins  ) p^wins (1 - p)^(rounds - wins) ,
+
+    where:
+    p = prob_win, the fixed probability of a single win
 
     This is used to calculate the chance of getting the amount of even wins
     (wins) that the player has. Even wins means a win that pays out at even

@@ -60,10 +60,11 @@ def play():
 def round(dealer, players, deck, ace_value, player_ace):
     # Players' turns
     # TODO*: turn player into person here, for clarity
-    for player in players + [dealer]:
+    for i, player in enumerate(players + [dealer]):
         # Clear screen of previous player
         if len(players) > 1:
-            player_choice('Pass to next player?', 3, ['OK'])
+            subsequent = 'first' if i==0 else 'next'
+            player_choice(f'Pass to {subsequent} player?', 3, ['OK'])
             print('\n' * get_screen_height())
         # Alert which player's turn
         print(f"{player.name.upper()}'S TURN!!")
