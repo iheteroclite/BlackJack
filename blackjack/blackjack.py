@@ -1,13 +1,12 @@
 __version__ = 0.36
 __author__ = 'iheteroclite'
 
-import inquirer
-
 from src.deck import Deck
 from src.hand import Hand
 from src.people import Dealer, Player
-from library.statistics import caught
-from library.cheat import cheat_setup
+from library.cheat import caught, cheat_setup
+from library.io import welcome, player_choice, print_chance_info
+from library.io import get_screen_height
 
 
 def play():
@@ -17,13 +16,14 @@ def play():
     player_ace = 'Player chooses'
     ace_qn = "Select the value of player's Aces"
     ace_value = player_choice(ace_qn, 3, [1, 11, player_ace])
+    ace = ace_value if ace_value == 1 else 11
 
     # Make a deck
     # min_decks ensures there's at least 1 deck per 4 players
     min_decks = 2 if num_players > 4 else 1
     num_decks = player_choice("decks", 1, [n + min_decks for n in range(8)])
     print('Number of decks selected was:', num_decks)
-    deck = Deck(num_decks, ace=ace_value if ace_value == 1 else 11)
+    deck = Deck(num_decks, ace=ace)
 
     # Initialise Players and Dealer
     # TODO: could add an option to load player save from file?
@@ -31,7 +31,7 @@ def play():
     players = [Player(deck, f'Player {x + 1}') for x in range(num_players)]
 
     # Check if player wants to cheat
-    cheat_setup(players)
+    cheat_setup(players, dealer)
 
     # Play as many rounds as the player wants (emulating a do-while loop)
     while True:
@@ -41,13 +41,13 @@ def play():
             player.calculate_probability()
             print(player)
             # Check if player has been caught cheating
-            caught(player)
+            if player.cheater:
+                caught(player)
         print(dealer)
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:
             # If deck has less than minimum cards, reshuffle
             if len(deck.cards) < (min_decks * 52):
-                ace = ace_value if ace_value == 1 else 11
                 deck = Deck(num_decks, ace=ace)
             for player in players + [dealer]:
                 player.reset(deck)
@@ -61,13 +61,17 @@ def round(dealer, players, deck, ace_value, player_ace):
     # Players' turns
     # TODO*: turn player into person here, for clarity
     for player in players + [dealer]:
+        # Clear screen of previous player
+        if len(players) > 1:
+            player_choice('Pass to next player?', 3, ['OK'])
+            print('\n' * get_screen_height())
         # Alert which player's turn
         print(f"{player.name.upper()}'S TURN!!")
         if isinstance(player, Player):
             # Take player input/consent before displaying cards
             player_choice('', 2, ['yes'], player)
 
-        # Max cards a player/dealer can have is 11 (1*4 + 2*4 +3*4 = 7*3 = 21)
+        # Max cards a player can have is 11 (4*1 + 4*2 + 3*3 = 21)
         for j in range(11):
             if player.hand.state == 'playing' or player.hand.state == 'draw':
                 # Display cards in player's hand
@@ -145,17 +149,6 @@ def score_hand(player, dealer):
     return 'loses' if word == 'losses' else ' '.join(word.split('_')[::-1])
 
 
-def player_choice(
-        msg="", i=0, options=['hit', 'stand', 'surrender'], player=False,):
-    # TODO: tidy this
-    bits = [", What do you do?", "Select number of ", " are you ready?", " "]
-    questions = [inquirer.List('choice',
-                 message=f'{player.name}{bits[i]}' if player
-                               else f'{bits[i]}{msg}',
-                 choices=options)]
-    return inquirer.prompt(questions)['choice']
-
-
 def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
     total = hand.get_total()
     if total == 21:
@@ -185,20 +178,6 @@ def dealer_move(hand, num):
     if hand.get_total() >= num:
         return 'stand'
     return 'hit'
-
-
-def welcome():
-    print('Welcome to BlackJack (with a twist)! \n'
-          + 'In this game you will have the option to play with friends '
-          + 'using multiple decks, and if you want to, you can try to cheat. '
-          + 'But watch out: you can get caught if the dealer sees you, or '
-          + 'even in a random pat-down, or if the card you cheat with has '
-          + 'already been played. \n'
-          + 'You can select your difficulty level by choosing different '
-          + 'dealers, but the chance of being caught will always increase '
-          + 'as the statistical liklihood of your success rate decreases - '
-          + 'so try not to win every game. \n'
-          + 'Have fun, rascals!')
 
 
 if __name__ == '__main__':
