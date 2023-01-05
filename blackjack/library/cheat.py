@@ -83,12 +83,11 @@ def cheat_choice(player, now='now'):
                                     sleeve_choices, player)
         sleeve_index = sleeve_choices.index(sleeve_card)
 
-        # Swap cards
         player.hand.cards[hand_index], player.sleeve.cards[sleeve_index] = (
             player.sleeve.cards[sleeve_index], player.hand.cards[hand_index])
         print(player.hand)
 
-        if cheat2:
+        if now == 'now':
             cheat_choice(player, now='again')
 
 

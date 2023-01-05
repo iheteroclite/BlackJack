@@ -35,7 +35,7 @@ def play():
 
     # Play as many rounds as the player wants (emulating a do-while loop)
     while True:
-        round(dealer, players, deck, ace_value, player_ace)
+        round(dealer, players, deck, ace_value == player_ace)
 
         for player in players:
             player.calculate_probability()
@@ -57,7 +57,7 @@ def play():
             break
 
 
-def round(dealer, players, deck, ace_value, player_ace):
+def round(dealer, players, deck, players_choose_ace):
     # Players' turns
     # TODO*: turn player into person here, for clarity
     for i, player in enumerate(players + [dealer]):
@@ -79,7 +79,7 @@ def round(dealer, players, deck, ace_value, player_ace):
                 print(player.hand)
 
                 # Check blackjack, 21, or bust
-                result = check_twenty_one(player.hand, player_ace == ace_value)
+                result = check_twenty_one(player.hand, players_choose_ace)
 
                 if result:
                     print(f'{player.name} you have {result}')
@@ -91,6 +91,13 @@ def round(dealer, players, deck, ace_value, player_ace):
                 if isinstance(player, Player):
                     if player.cheater:
                         cheat_choice(player)
+                        # Check blackjack, 21, or bust AGAIN
+                        result = check_twenty_one(player.hand,
+                                                  players_choose_ace)
+                        if result:
+                            print(f'{player.name} you have {result}')
+                            # Go to next player if player's turn is over
+                            continue
                     player_move = player_choice(player=player)
                 else:
                     player_move = dealer_move(dealer.hand, 17)
