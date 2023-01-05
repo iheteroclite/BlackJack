@@ -3,10 +3,10 @@ __author__ = 'iheteroclite'
 
 from random import randint
 
-from src.deck import faces, suits, Card
+from src.deck import Card
 from src.hand import Hand
 from src.sleeve import Sleeve
-from library.statistics import chance_of_natural_blackjack
+from library.statistics import chance_of_single_blackjack
 from library.statistics import chance_at_least_result
 from library.statistics import chance_of_blackjack_totals
 from library.statistics import chance_with_fixed_percent
@@ -62,7 +62,7 @@ class Player(People):
         hand.
         Calculate probability of blackjack BEFORE drawing cards.
         """
-        prob = chance_of_natural_blackjack(deck)
+        prob = chance_of_single_blackjack(deck)
         self.probabilities = [{
             'probability': prob,
             'blackjack': False
@@ -105,7 +105,7 @@ class Player(People):
         return super().__str__(self.name, 'you have scored', 1, bj, even)
 
     def reset(self, deck):
-        prob = chance_of_natural_blackjack(deck)
+        prob = chance_of_single_blackjack(deck)
         self.probabilities.append({
             'probability': prob,
             'blackjack': False

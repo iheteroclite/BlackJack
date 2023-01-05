@@ -42,7 +42,7 @@ def play():
             print(player)
             # Check if player has been caught cheating
             if player.cheater:
-                caught(player)
+                catch(player)
         print(dealer)
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:

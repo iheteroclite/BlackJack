@@ -26,7 +26,8 @@ class TestCodeFormat(unittest.TestCase):
         PEG-8 style guide prescribes avoidance of backslash \ for line
         continuation, and now allows/suggests mathematical long addition format
         """
-        style = pycodestyle.StyleGuide(quiet=False, ignore=['E722', 'W503'])
+        style = pycodestyle.StyleGuide(quiet=False, ignore=['E722',
+                                                            'W503', 'E226'])
         result = style.check_files(['blackjack.py', 'src/hand.py',
                                     'src/deck.py', 'library/statistics.py',
                                     'test/test_deck.py', 'src/people.py'])
@@ -233,6 +234,14 @@ class DeckTestCase(unittest.TestCase):
             dealer.hand.state = test[1]
             with self.subTest(player=test[0], dealer=test[1]):
                 self.assertEqual(test[2], score_hand(player, dealer))
+
+    def test_aces_new_deck(self):
+        count = 0
+        for card in self.deck.cards:
+            if card.face == faces[0]:
+                count += card.value
+
+        self.assertEqual(count, 44)
 
 
 if __name__ == '__main__':

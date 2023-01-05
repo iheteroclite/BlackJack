@@ -25,4 +25,4 @@ class Sleeve:
             card_face = player_choice(query, 3, options=faces)
             card_suit = suits[randint(0, len(suits) - 1)]
 
-            self.cards.append(Card(card_suit, card_face))
+            self.cards.append(Card(card_suit, card_face, cheat_card=True))

@@ -2,17 +2,27 @@ from src.deck import Card
 from library.io import print_cheat_info, print_chance_info, player_choice
 from library.io import card_string, get_screen_height
 
-def caught(player):
+def try_catch(player):
     """Check if the player has been caught (or assumed) cheating.
 
     """
     # TODO
     # If card has already been played
+    # TODO: write a test case for this
+    for card in player.hand:
+        if not card_in_deck(card, deck):
+            catch_
+
     # elif caught due to unlikely/impossible win rate
     # elif caught by random patdown
     # elif incorrectly assumed culpable for other player's cheat
     return False
 
+def check_caught():
+    pass
+
+def caught():
+    pass
 
 def punishment(player):
     pass
@@ -91,8 +101,11 @@ def cheat_choice(player, now='now'):
             cheat_choice(player, now='again')
 
 
-
-
-
+def card_in_deck(search_card, deck):
+    copies_in_deck = 0
+    for card in deck:
+        if card.face == search_card.face and card.suit == search_card.suit:
+            copies_in_deck += 1
+    return copies_in_deck
 
 

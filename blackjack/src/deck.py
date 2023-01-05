@@ -9,10 +9,11 @@ faces = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10',
 
 
 class Card:
-    def __init__(self, suit, face, ace_value=11):
+    def __init__(self, suit, face, ace_value=11, cheat_card=False):
         self.suit = suit
         self.face = face
         self.value = 0
+        self.cheat_card = cheat_card
         try:
             self.value = int(self.face)
         except:
