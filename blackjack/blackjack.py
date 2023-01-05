@@ -4,7 +4,7 @@ __author__ = 'iheteroclite'
 from src.deck import Deck
 from src.hand import Hand
 from src.people import Dealer, Player
-from library.cheat import caught, cheat_setup
+from library.cheat import caught, cheat_setup, cheat_choice
 from library.io import welcome, player_choice, print_chance_info
 from library.io import get_screen_height
 
@@ -63,7 +63,7 @@ def round(dealer, players, deck, ace_value, player_ace):
     for i, player in enumerate(players + [dealer]):
         # Clear screen of previous player
         if len(players) > 1:
-            subsequent = 'first' if i==0 else 'next'
+            subsequent = 'first' if i == 0 else 'next'
             player_choice(f'Pass to {subsequent} player?', 3, ['OK'])
             print('\n' * get_screen_height())
         # Alert which player's turn
@@ -76,23 +76,22 @@ def round(dealer, players, deck, ace_value, player_ace):
         for j in range(11):
             if player.hand.state == 'playing' or player.hand.state == 'draw':
                 # Display cards in player's hand
-                print('Your hand contains:')
                 print(player.hand)
 
                 # Check blackjack, 21, or bust
-                result = check_twenty_one(player.hand,
-                                          player_ace == ace_value)
+                result = check_twenty_one(player.hand, player_ace == ace_value)
+
                 if result:
                     print(f'{player.name} you have {result}')
                     # Go to next player if player's turn is over
                     continue
 
-                # get user input for if they want to hit, stand, or surrender
+                # Get user input: hit, stand, surrender [or cheat]
                 player_move = ''
                 if isinstance(player, Player):
+                    if player.cheater:
+                        cheat_choice(player)
                     player_move = player_choice(player=player)
-                # elif hand.person == 'AI':
-                    # TODO: add an option to have AI make choices
                 else:
                     player_move = dealer_move(dealer.hand, 17)
 

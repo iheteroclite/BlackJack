@@ -130,7 +130,8 @@ class Player(People):
         self.sleeve = Sleeve(self.name)
         print(self.sleeve)
 
-    def cheat(self):
+    def swap_cards(self, hand_card, sleeve_card):
+        """Swap a card from player's sleeve with a card from their hand."""
         pass
 
 

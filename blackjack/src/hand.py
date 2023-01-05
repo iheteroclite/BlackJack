@@ -13,6 +13,8 @@ class Hand:
         self.success = 'tbd'
 
     def __str__(self):
+        print('Your hand contains:')
+        print([card for card in self.cards])
         return card_string(self.cards)
 
     def get_total(self):

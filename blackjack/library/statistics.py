@@ -33,6 +33,7 @@ def chance_of_being_caught_with_normal_dist(c_max, m, sd, w):
 # variable percentage change of winning (which depends on the number of 10/Ace
 # in the deck, and number of previous blackjack wins)
 
+
 def chance_of_natural_blackjack(deck):
     """Calculate the probability of getting blackjack from specific deck.
 
@@ -58,6 +59,7 @@ def chance_of_natural_blackjack(deck):
     prob_draw_ten = tens / (cards - 1)
 
     return prob_draw_ace * prob_draw_ten * 2
+
 
 def chance_of_blackjack_totals(results, at_least=False):
     """Calculate the chance of getting the results you have over every game.
@@ -142,7 +144,7 @@ def chance_at_least_blackjack_totals(deal_count, bj_count, bj_wins, not_bjs):
     return 1 - sum_chances
 
 
-# Statistics for 'even odds' wins (not blackjack), modelled as a binomeal
+# Statistics for 'even odds' wins (not blackjack), modelled as a binomial
 # distribution with a fixed chance of winning a round.
 
 def chance_with_fixed_percent(wins, rounds, prob_win=0.3742):
@@ -181,7 +183,7 @@ def chance_with_fixed_percent(wins, rounds, prob_win=0.3742):
 
 
 def standard_dev_fixed_percent(rounds, prob_win):
-    """Calculate the standard deviation of a binomeal distribution."""
+    """Calculate the standard deviation of a binomial distribution."""
 
     return sqrt(rounds * prob_win * (1 - prob_win))
 

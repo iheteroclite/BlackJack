@@ -26,7 +26,7 @@ def player_choice(
     # TODO: tidy this
     bits = [', What do you do?', 'Select number of ', ' are you ready?', ' ']
     questions = [inquirer.List('choice',
-                 message=f'{player.name}{bits[i]}' if player
+                 message=f'{player.name}{bits[i]}{msg}' if player
                                else f'{bits[i]}{msg}',
                  choices=options)]
     return inquirer.prompt(questions)['choice']

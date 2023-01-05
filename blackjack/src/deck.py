@@ -13,7 +13,6 @@ class Card:
         self.suit = suit
         self.face = face
         self.value = 0
-        self.lines = []
         try:
             self.value = int(self.face)
         except:
@@ -24,6 +23,9 @@ class Card:
                     self.value = ace_value
             elif self.face in faces[10:]:
                 self.value = 10
+
+    def __str__(self):
+        return f'{self.face} of {self.suit}'
 
     def set_ace_value(self, ace_value):
         self.value = ace_value

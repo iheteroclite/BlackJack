@@ -15,10 +15,6 @@ class Sleeve:
     def __str__(self):
         return f'{self.name}, Your sleeve hides:\n' + card_string(self.cards)
 
-    def swap_cards(self, card_in, card_out):
-        self.cards.append(card_in)
-        return self.cards.pop(card_out)
-
     def hide_cards(self):
         num_in_sleeve = player_choice('sleeved cards', 1, [1, 2, 3])
 
