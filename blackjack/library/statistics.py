@@ -147,7 +147,7 @@ def chance_at_least_blackjack_totals(results):
 
     print('----chances-----', chances)
     if len(chances) > 1:
-        return 1 - sum(chances[1:])
+        return sum(chances[1:])
     return 1
 
 

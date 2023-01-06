@@ -160,7 +160,8 @@ def check_twenty_one(player, ace_choice=False, num=False, state='playing'):
         if hand.state == 'draw':
             hand.state = 'blackjack'
             # Update blackjack tally for probability calculations
-            player.probabilities[-1]['blackjack'] = True
+            if isinstance(player, Player):
+                player.probabilities[-1]['blackjack'] = True
         else:
             hand.state = 21
         return hand.state
