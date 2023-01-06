@@ -4,10 +4,9 @@ __author__ = 'iheteroclite'
 from src.deck import Deck
 from src.hand import Hand
 from src.people import Dealer, Player
-from library.cheat import caught, cheat_setup, cheat_choice
+from library.cheat import cheat_setup, cheat_choice
 from library.io import welcome, player_choice, print_chance_info
 from library.io import get_screen_height
-
 
 def play():
     # Setup number of players and ace value
@@ -29,6 +28,7 @@ def play():
     # TODO: could add an option to load player save from file?
     dealer = Dealer(num_players, deck)
     players = [Player(deck, f'Player {x + 1}') for x in range(num_players)]
+    banned_players = []
 
     # Check if player wants to cheat
     cheat_setup(players, dealer)
@@ -38,11 +38,10 @@ def play():
         round(dealer, players, deck, ace_value == player_ace)
 
         for player in players:
-            player.calculate_probability()
             print(player)
             # Check if player has been caught cheating
             if player.cheater:
-                catch(player)
+                dealer.try_catch(player, players, banned_players, deck)
         print(dealer)
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:

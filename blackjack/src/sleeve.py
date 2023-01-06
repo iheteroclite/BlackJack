@@ -26,3 +26,7 @@ class Sleeve:
             card_suit = suits[randint(0, len(suits) - 1)]
 
             self.cards.append(Card(card_suit, card_face, cheat_card=True))
+
+    def mark_cheat_cards(self):
+        for card in self.cards:
+            card.cheat_card = True

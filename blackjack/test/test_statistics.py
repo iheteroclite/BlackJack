@@ -7,7 +7,8 @@ import random
 from src.deck import Deck, Card, suits, faces
 from src.people import Player
 from blackjack import check_twenty_one
-from library.statistics import chance_of_blackjack_totals, chance_n_blackjack_total
+from library.statistics import chance_of_blackjack_totals
+from library.hypergeometric_distribution import chance_n_blackjack_total
 from library.statistics import chance_with_fixed_percent
 from library.statistics import chance_of_single_blackjack
 
@@ -157,7 +158,17 @@ class StatisticsTestCase(unittest.TestCase):
                 # self.assertEqual(round(P_at_least_n1, 1), 0.5)
 
     def test_chance_n_blackjack_total_pulling_bj_each_draw(self):
-        """Check known probability to draw 4 sets of blackjacks."""
+        """Check known probability to draw 4 sets of blackjacks.
+
+        As the probability of drawing n_bjs blackjacks each turn varies,
+        as the number and value of cards and (possibly) also the number
+        of tens/aces varies each turn, calculating probability of having
+        drawn n_bjs over multiple rounds is a very complex problem.
+
+        I have therefore modelled my formula in Mathematica, which is
+        documented in the project documentation. I have used the output
+
+        """
         # deck1 is a dummy deck for players to draw cards from
         deck1 = Deck()
         # deck2 will have an ace and 10 value removed each turn, for probability
@@ -200,7 +211,4 @@ class StatisticsTestCase(unittest.TestCase):
         deck2.cards.pop(0)
 
         self.assertEqual(len(deck1.cards), len(deck2.cards))
-
-
-
 
