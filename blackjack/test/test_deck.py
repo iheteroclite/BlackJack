@@ -131,47 +131,47 @@ class DeckTestCase(unittest.TestCase):
 
     def test_21_or_less_is_valid_hand(self):
         poss_scores = [i for i in range(1, 20)]
-        hand = Hand(self.deck)
+        player = Player(self.deck, 'Sash')
         for j, score in enumerate(poss_scores):
-            hand.cards = [Card(suits[0], 1), Card(suits[1], score)]
-            check = check_twenty_one(hand)
-            if check == 'blackjack' or check == 21:
+            player.hand.cards = [Card(suits[0], 1), Card(suits[1], score)]
+            check = check_twenty_one(player)
+            if player.hand.state in ['blackjack', 21]:
                 check = False
             with self.subTest(score=score):
                 self.assertFalse(check)
 
     def test_22_or_more_invalid_hand_bust(self):
         poss_scores = [i for i in range(2, 19)]
-        hand = Hand(self.deck)
+        player = Player(self.deck, 'Ali')
         for j, score in enumerate(poss_scores):
-            hand.cards = [Card(suits[0], 10), Card(suits[0], 10),
-                          Card(suits[1], score)]
-            check = check_twenty_one(hand)
-            with self.subTest(score=score):
-                self.assertIs(check, 'bust')
+            player.hand.cards = [Card(suits[0], 10), Card(suits[0], 10),
+                                 Card(suits[1], score)]
+            check_twenty_one(player)
+            with self.subTest(score=score+20):
+                self.assertIs(player.hand.state, 'bust')
 
     def test_king_and_ace_equals_blackjack(self):
-        hand = Hand(self.deck)
-        hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Ace')]
-        score = check_twenty_one(hand)
-        self.assertEqual(score, 'blackjack')
+        player = Player(self.deck, 'Alex')
+        player.hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Ace')]
+        score = check_twenty_one(player)
+        self.assertEqual(player.hand.state, 'blackjack')
 
     def test_king_queen_ace_equals_21(self):
-        hand = Hand(self.deck)
-        hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Queen'),
+        player = Player(self.deck, 'Jo')
+        player.hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Queen'),
                       Card(suits[0], 'Ace', 1)]
-        hand.state = 'playing'
-        score = check_twenty_one(hand)
-        self.assertEqual(score, 21)
+        player.hand.state = 'playing'
+        check_twenty_one(player)
+        self.assertEqual(player.hand.state, 21)
 
     def test_nine_ace_ace_equals_21(self):
         """Assumes the program accurately sets the ace value."""
-        hand = Hand(self.deck)
-        hand.cards = [Card(suits[0], 9), Card(suits[0], 'Ace'),
-                      Card(suits[0], 'Ace', 1)]
-        hand.state = 'playing'
-        score = check_twenty_one(hand)
-        self.assertEqual(score, 21)
+        player = Player(self.deck, 'Sam')
+        player.hand.cards = [Card(suits[0], 9), Card(suits[0], 'Ace'),
+                             Card(suits[0], 'Ace', 1)]
+        player.hand.state = 'playing'
+        check_twenty_one(player)
+        self.assertEqual(player.hand.state, 21)
 
     def test_correctly_set_selected_ace_vale(self):
         """Make a deck of aces, then test its value is 52 when ace is 1."""

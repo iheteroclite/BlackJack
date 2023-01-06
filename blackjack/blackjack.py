@@ -78,7 +78,7 @@ def round(dealer, players, deck, players_choose_ace):
                 print(player.hand)
 
                 # Check blackjack, 21, or bust
-                result = check_twenty_one(player.hand, players_choose_ace)
+                result = check_twenty_one(player, ace_choic=players_choose_ace)
 
                 if result:
                     print(f'{player.name} you have {result}')
@@ -91,7 +91,7 @@ def round(dealer, players, deck, players_choose_ace):
                     if player.cheater:
                         cheat_choice(player)
                         # Check blackjack, 21, or bust AGAIN
-                        result = check_twenty_one(player.hand,
+                        result = check_twenty_one(player,
                                                   players_choose_ace)
                         if result:
                             print(f'{player.name} you have {result}')
@@ -141,8 +141,6 @@ def score_hand(player, dealer):
         elif dealer_score != 'blackjack':
             if score == 'blackjack':
                 word = 'blackjack_wins'
-                # Update blackjack tally for probability calculations
-                player.probabilities[-1]['blackjack'] = True
             # If there's no other condition, highest score wins
             elif score > dealer_score:
                 word = 'even_wins'
@@ -155,11 +153,14 @@ def score_hand(player, dealer):
     return 'loses' if word == 'losses' else ' '.join(word.split('_')[::-1])
 
 
-def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
+def check_twenty_one(player, ace_choice=False, num=False, state='playing'):
+    hand = player.hand
     total = hand.get_total()
     if total == 21:
         if hand.state == 'draw':
             hand.state = 'blackjack'
+            # Update blackjack tally for probability calculations
+            player.probabilities[-1]['blackjack'] = True
         else:
             hand.state = 21
         return hand.state
@@ -174,7 +175,7 @@ def check_twenty_one(hand, ace_choice=False, num=False, state='playing'):
                 if hand.dealer or (ace_choice and ace_is_1):
                     card.set_ace_value(1)
                     if hand.get_total() <= 21:   # re-check after changing ace
-                        return check_twenty_one(hand)
+                        return check_twenty_one(player)
         hand.state = 'bust'
         return 'bust'
     return False

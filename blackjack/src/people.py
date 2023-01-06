@@ -12,6 +12,7 @@ from library.statistics import chance_of_blackjack_totals
 from library.statistics import chance_with_fixed_percent
 from library.statistics import standard_dev_fixed_percent
 from library.statistics import chance_caught_with_normal_dist
+from library.statistics import chance_at_least_fixed_percent_blackjack
 from library.io import player_choice
 from library.cheat import card_in_deck
 
@@ -125,10 +126,8 @@ class Player(People):
         self.chance_even = chance_with_fixed_percent(self.even_wins,
                                                      self.games)
         # Probability of getting at least this many bj/win in rounds so far
-        self.tot_chance_bj = chance_of_blackjack_totals(self.probabilities,
-                                                        at_least=True)
-        self.tot_chance_even = chance_at_least_result(self.even_wins,
-                                                      self.games)
+        self.tot_chance_bj = chance_at_least_fixed_percent_blackjack(self.probabilities)
+        self.tot_chance_even = chance_at_least_result(self.even_wins,self.games)
 
     def hide_cards(self):
         """Hide cards up player's sleeve so they can use them to cheat."""

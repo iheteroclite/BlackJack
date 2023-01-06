@@ -88,8 +88,9 @@ def chance_of_blackjack_totals(results, at_least=False):
     bj_count = len(bj_wins)
 
     if at_least:
-        return chance_at_least_blackjack_totals(rounds, bj_count,
-                                                bj_wins, not_bjs)
+        return chance_at_least_blackjack_totals(results)
+        #return chance_at_least_blackjack_totals(rounds, bj_count,
+         #                                       bj_wins, not_bjs)
 
     return binomial(rounds, bj_count, bj_wins, not_bjs)
 
@@ -111,8 +112,8 @@ def binomial(rounds, bj_count, bj_wins, not_bjs):
     """
     return prod(bj_wins) * prod(not_bjs) * comb(rounds, bj_count)
 
-
-def chance_at_least_blackjack_totals(rounds, bj_count, bj_wins, not_bjs):
+def chance_at_least_blackjack_totals(results):
+#def chance_at_least_blackjack_totals(rounds, bj_count, bj_wins, not_bjs):
     """Chance of at least bj_count many blackjacks in these rounds.
 
     If you do 2 rounds, with 1 blackjack, returns the total chance of getting
@@ -133,17 +134,60 @@ def chance_at_least_blackjack_totals(rounds, bj_count, bj_wins, not_bjs):
 
     Similar to chance_at_least_result()
     """
-    # Sum the probability of getting each number of bj's less than bj_count
-    sum_chances = 0
+    chances = []
+    bj_probs = [r['probability'] for r in results if r['blackjack']]
+    num_bj = len(bj_probs)
 
-    #if bj_count == 1:
+    for i in range(num_bj):
+        chances.append( chance_of_blackjack_totals(results) )
+        for result in results:
+            if result['blackjack'] == True:
+                result['blackjack'] == False
+                break
+
+    print('----chances-----', chances)
+    if len(chances) > 1:
+        return 1 - sum(chances[1:])
+    return 1
 
 
-    for i in range(bj_count - 1):
-        # Swap bj percentages into the not_bj percentage list
-        new_not_bjs = not_bjs + bj_wins[:i+1]
-        sum_chances += binomial(rounds, bj_count, bj_wins[i+1:], new_not_bjs)
 
+    # want to work out P_0 P_1 P_n-1
+
+
+    #chances = [binomial(rounds, bj_count - i, bj_wins[i:], not_bjs + bj_wins[:i])
+    #           for i in range(bj_count)]
+
+   # print('---------sum_chances_______', chances)
+    # sum_chances = 0
+
+    # wincount = bj_count
+    # print ('------wincount------', wincount)
+
+    # for i in range(bj_count):
+    #     bj_win = bj_wins.pop(0)
+    #     print('-------- bj_win --------------', bj_win )
+    #     not_bjs.append(bj_win)
+
+    #     print ('------wincount------', wincount)
+    #     binomial_cal = binomial(rounds, wincount, bj_wins, not_bjs)
+    #     print('-------i----------', i)
+    #     print('-------binomeal-------', binomial_cal)
+    #     sum_chances += binomial(rounds, wincount, bj_wins, not_bjs)
+    #     wincount -= 1
+    #     if wincount < 1:
+    #         break
+   # return 1 - sum(chances)
+# _______________
+#     # Sum the probability of getting each number of bj's less than bj_count
+#     sum_chances = 0
+
+#     #if bj_count == 1:
+#     for i in range(bj_count):
+#         # Swap bj percentages into the not_bj percentage list
+#         new_not_bjs = not_bjs + bj_wins[:i+1]
+#         sum_chances += binomial(rounds, bj_count - (i+1), bj_wins[i+1:], new_not_bjs)
+# #_________________
         #i=0 (does nothing)
         # bj_count = 1
         # bj_count - 1 = 0
@@ -158,7 +202,7 @@ def chance_at_least_blackjack_totals(rounds, bj_count, bj_wins, not_bjs):
 
         # i = 2
         #new_not_bjs = not_bjs + bj_wins[0] + bj_wins[1]
-    return 1 - sum_chances
+    #return 1 - sum_chances
 
 
 # Statistics for 'even odds' wins (not blackjack), modelled as a binomial
@@ -205,7 +249,7 @@ def standard_dev_fixed_percent(rounds, prob_win=0.3742):
     return sqrt(rounds * prob_win * (1 - prob_win))
 
 
-def chance_at_least_result(wins, rounds):
+def chance_at_least_result(wins, rounds, prob_win=0.3742):
     """Calculate the chance of getting at least wins many wins in these rounds.
 
     If you do 2 rounds, with 1 win, return the total chance of getting either
@@ -217,5 +261,21 @@ def chance_at_least_result(wins, rounds):
     chance_n is the chance of getting n wins, with n = actual wins - 1
     """
 
-    chances = [chance_with_fixed_percent(w, rounds) for w in range(wins)]
+    chances = [chance_with_fixed_percent(w, rounds, prob_win) for w in range(wins)]
+    print('----------CHANCES-----------', chances)
     return 1 - sum(chances)
+
+def chance_at_least_fixed_percent_blackjack(results):
+    probabilities = [result['probability'] for result in results]
+    # TODO wins isn't updating, so it doesn't matter what i do with the probability
+
+    wins = len([1 for result in results if result['blackjack']])
+
+    rounds = len(results)
+    mean = sum(probabilities) / rounds
+    print('-----------MEAN------',mean)
+    print('-----BJ_wins-----', wins)
+
+    return chance_at_least_result(wins, rounds, prob_win=mean)
+    #return (1 - mean) if wins==1 else chance_at_least_result(wins, rounds, prob_win=mean)
+
