@@ -12,6 +12,7 @@ from library.hypergeometric_distribution import chance_n_blackjack_total
 from library.statistics import chance_with_fixed_percent
 from library.statistics import chance_at_least_blackjack_totals
 from library.statistics import chance_of_single_blackjack
+from library.statistics import  chance_at_least_fixed_percent_blackjack
 
 
 class StatisticsTestCase(unittest.TestCase):
@@ -101,16 +102,46 @@ class StatisticsTestCase(unittest.TestCase):
 
     def test_chance_at_least_blackjack_totals_one_bj(self):
         results = [{
-           'probability': 4.8,
+           'probability': 0.048,
            'blackjack': False,
-           } for i in range(10)]
-
-
+           } for i in range(5)]
 
         results[0]['blackjack'] = True
 
         print(results)
 
-        chance = chance_of_blackjack_totals(results, at_least=True)
+        chance =  chance_at_least_fixed_percent_blackjack(results)
 
-        self.assertEqual(chance, 1)
+        self.assertLess(chance, 0.999)
+        self.assertGreater(chance, 0.001)
+
+    def test_chance_at_least_blackjack_totals__fixed_50_percent_bj(self):
+        results = [{
+           'probability': 0.5,
+           'blackjack': False,
+           } for i in range(5)]
+
+        results[0]['blackjack'] = True
+
+        print(results)
+
+        chance =  chance_at_least_fixed_percent_blackjack(results)
+
+        self.assertLess(chance, 0.999)
+        self.assertGreater(chance, 0.001)
+
+    def test_chance_at_least_blackjack_totals_two_bj(self):
+        results = [{
+           'probability': 0.048,
+           'blackjack': False,
+           } for i in range(10)]
+
+        results[0]['blackjack'] = True
+        results[-1]['blackjack'] = True
+
+        print(results)
+
+        chance =  chance_at_least_fixed_percent_blackjack(results)
+
+        self.assertLess(chance, 0.999)
+        self.assertGreater(chance, 0.001)

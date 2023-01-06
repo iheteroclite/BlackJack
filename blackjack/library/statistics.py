@@ -267,7 +267,7 @@ def chance_at_least_result(wins, rounds, prob_win=0.3742):
 
 def chance_at_least_fixed_percent_blackjack(results):
     probabilities = [result['probability'] for result in results]
-    # TODO wins isn't updating, so it doesn't matter what i do with the probability
+    print('------statistics line 270---probabilities-', probabilities)
 
     wins = len([1 for result in results if result['blackjack']])
 

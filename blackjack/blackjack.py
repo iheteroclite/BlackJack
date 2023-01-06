@@ -78,7 +78,7 @@ def round(dealer, players, deck, players_choose_ace):
                 print(player.hand)
 
                 # Check blackjack, 21, or bust
-                result = check_twenty_one(player, ace_choic=players_choose_ace)
+                result = check_twenty_one(player, ace_choice=players_choose_ace)
 
                 if result:
                     print(f'{player.name} you have {result}')
