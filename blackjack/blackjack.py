@@ -35,7 +35,7 @@ def play():
     cheat_setup(players, dealer)
 
     # Play as many rounds as the player wants (emulating a do-while loop)
-    while True:
+    while players:
         round(dealer, players, deck, ace_choice)
 
         for player in players:
@@ -46,12 +46,15 @@ def play():
         print(dealer)
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:
-            # If deck has less than minimum cards, reshuffle
-            if len(deck.cards) < (min_decks * 52):
-                deck = Deck(num_decks, ace=ace)
-            for player in players + [dealer]:
-                player.reset(deck)
-                player.hand.state = 'draw'
+            if players:
+                # If deck has less than minimum cards, reshuffle
+                if len(deck.cards) < (min_decks * 52):
+                    deck = Deck(num_decks, ace=ace)
+                for player in players + [dealer]:
+                    player.reset(deck)
+                    player.hand.state = 'draw'
+            else:
+                print('The dealer has kicked you out of the casino!')
         else:
             # Leave the table (exit game)
             break
