@@ -50,7 +50,8 @@ class UserSelectionTestCase(TestCase):
                 self.assertEqual(num_decks, deck_input)
                 # The number of cards in the deck is correct
                 # (after 2 are drawn for each player and dealer)
-                self.assertEqual((len(deck.cards) + len(players)*2 + 2)/ 52, deck_input)
+                deck_add_cards = (len(deck.cards) + len(players) * 2 + 2) / 52
+                self.assertEqual(deck_add_cards, deck_input)
                 # The minimum deck size is either 1 or 2 52-card decks
                 self.assertTrue(min_decks in [1, 2])
 
@@ -81,11 +82,11 @@ class UserSelectionTestCase(TestCase):
         initial_num_cards = len(players[0].hand.cards)
         initial_score = players[0].hand.state
 
-        # Set the mocked input for round()
+        # Set the mocked input for game_round()
         mocked_input.side_effect = ['OK', 'yes', 'hit', 'stand']
         # Play the round,
         # even if the score goes over 21, check_twenty_one is mocked to return false
-        blackjack.round(dealer, players, deck, ace_choice)
+        blackjack.game_round(dealer, players, deck, ace_choice)
         final_num_cards = len(players[0].hand.cards)
         final_score = players[0].hand.state
 
@@ -104,11 +105,11 @@ class UserSelectionTestCase(TestCase):
         initial_num_cards = len(players[0].hand.cards)
         initial_score = players[0].hand.state
 
-        # Set the mocked input for round()
+        # Set the mocked input for game_round()
         mocked_input.side_effect = ['OK', 'yes', 'stand']
         # Play the round,
         # even if the score goes over 21, check_twenty_one is mocked to return false
-        blackjack.round(dealer, players, deck, ace_choice)
+        blackjack.game_round(dealer, players, deck, ace_choice)
         final_num_cards = len(players[0].hand.cards)
         final_score = players[0].hand.state
 
@@ -117,5 +118,3 @@ class UserSelectionTestCase(TestCase):
 
         self.assertEqual(initial_num_cards, final_num_cards)
         self.assertEqual(players[0].hand.state, player_total)
-
-

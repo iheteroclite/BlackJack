@@ -13,6 +13,7 @@ from src.hand import Hand
 from src.people import Player, Dealer
 from blackjack import check_twenty_one, score_hand
 
+
 class PlayAndScoreTestCase(unittest.TestCase):
     def setUp(self):  # this method will be run before each test
         self.deck = Deck()
@@ -142,7 +143,7 @@ class PlayAndScoreTestCase(unittest.TestCase):
             player.hand.state = test[0]
             dealer.hand.state = test[1]
             with self.subTest(player=test[0], dealer=test[1]):
-                self.assertEqual(test[2], score_hand(player, dealer))
+                self.assertEqual(test[2], score_hand(player, dealer)[0])
 
     def test_aces_new_deck(self):
         count = 0
@@ -151,4 +152,3 @@ class PlayAndScoreTestCase(unittest.TestCase):
                 count += card.value
 
         self.assertEqual(count, 44)
-

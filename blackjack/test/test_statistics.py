@@ -72,9 +72,9 @@ class StatisticsTestCase(unittest.TestCase):
 
     def test_chance_blackjack_totals_unity(self):
         results = [{
-           'probability': 1,
-           'blackjack': random.getrandbits(1),
-           } for i in range(10)]
+                   'probability': 1,
+                   'blackjack': random.getrandbits(1),
+                   } for i in range(10)]
 
         chance = chance_at_least_mean_blackjack(results)
         self.assertEqual(chance, 1)
@@ -84,9 +84,9 @@ class StatisticsTestCase(unittest.TestCase):
         bjs = [True, False] * 5
         probs = [1, 0] * 5
         results = [{
-           'probability': probs[i],
-           'blackjack': bjs[i],
-           } for i in range(10)]
+                   'probability': probs[i],
+                   'blackjack': bjs[i],
+                   } for i in range(10)]
 
         chance = chance_at_least_mean_blackjack(results)
 
@@ -94,9 +94,9 @@ class StatisticsTestCase(unittest.TestCase):
 
     def test_chance_at_least_mean_blackjack_one_bj(self):
         results = [{
-           'probability': 0.048,
-           'blackjack': False,
-           } for i in range(5)]
+                   'probability': 0.048,
+                   'blackjack': False,
+                   } for i in range(5)]
 
         results[0]['blackjack'] = True
 
@@ -107,9 +107,9 @@ class StatisticsTestCase(unittest.TestCase):
 
     def test_chance_at_least_mean_blackjack__fixed_50_percent_bj(self):
         results = [{
-           'probability': 0.5,
-           'blackjack': False,
-           } for i in range(5)]
+                   'probability': 0.5,
+                   'blackjack': False,
+                   } for i in range(5)]
 
         results[0]['blackjack'] = True
 
@@ -120,9 +120,9 @@ class StatisticsTestCase(unittest.TestCase):
 
     def test_chance_at_least_mean_blackjack_two_bj(self):
         results = [{
-           'probability': 0.048,
-           'blackjack': False,
-           } for i in range(10)]
+                   'probability': 0.048,
+                   'blackjack': False,
+                   } for i in range(10)]
 
         results[0]['blackjack'] = True
         results[-1]['blackjack'] = True

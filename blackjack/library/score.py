@@ -10,6 +10,7 @@ __all__ = ['score_hand', 'check_twenty_one']
 import src.people as people
 from library.io import player_choice
 
+
 def score_hand(player, dealer):
     """Compares the dealer and player scores to see the success state"""
     score = player.hand.state
@@ -26,7 +27,6 @@ def score_hand(player, dealer):
             else:
                 word = 'even_wins'
                 stat = 0.3742
-            #word = 'blackjack_wins' if score == 'blackjack' else 'even_wins'
         # Push if there's a tie
         elif score == dealer_score:
             word = 'pushes'
@@ -82,4 +82,3 @@ def check_twenty_one(player, ace_choice=False):
         hand.state = 'bust'
         return 'bust'
     return False
-

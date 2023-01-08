@@ -234,9 +234,9 @@ class Dealer(People):
         return True if rand_score < caught_probability else False
 
     def shout(self, player, msg):
-                    # \033[91m♦\033[00m
         names = ['Twinkletoes', 'Ragamuffin', 'Ruffian', 'Pirate']
         name_index = randint(0, len(names) - 1)
+        # The \033[91m is for red text, \033[93m for yellow text
         print(f'\033[93m{self.name} shouts \033[00m')
         print(f'\033[91m{player.name.upper()}, I SEE YOU CHEATING!\033[00m')
         print(msg)

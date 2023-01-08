@@ -30,5 +30,3 @@ class PeopleTestCase(unittest.TestCase):
             player = Player(self.deck, player_str)
             players += player.name
         self.assertEqual(players, 'Player 1Player 2Player 3Player 4')
-
-

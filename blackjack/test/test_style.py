@@ -1,3 +1,8 @@
+"""Test that the project files comply with PEG-8 style guide 2022
+
+There are some updates from 2022 that pycodestyle has not yet added.
+See test comments for further details."""
+
 __version__ = 0.40
 __author__ = 'iheteroclite'
 
@@ -16,13 +21,18 @@ class TestCodeFormat(unittest.TestCase):
         """
         style = pycodestyle.StyleGuide(quiet=False, ignore=['W503'])
         result = style.check_files(['src/hand.py',
-                                   # 'library/statistics.py',
+                                    'src/sleeve.py',
+                                    'src/hand.py',
                                     'library/io.py',
-                                    'test/test_deck.py',
                                     'library/cheat.py',
+                                    'library/score.py',
                                     'src/sleeve.py',
                                     'test/test_probabilities.py',
-                                    'test/test_style.py'])
+                                    'test/test_style.py',
+                                    'test/test_deck.py',
+                                    'test/test_people.py',
+                                    'test/test_statistics.py',
+                                    'test/test_scoring.py'])
         self.assertEqual(result.total_errors, 0,
                          'Found code style errors (and warnings).')
 
@@ -41,7 +51,8 @@ class TestCodeFormat(unittest.TestCase):
 
     def test_conformance_ignore_E226(self):
         r"""Test conformity to PEP-8.
-        ignoring E226 as I think missing whitespace around a string
+
+        Ignoring E226 as I think (missing whitespace) around a string
         operation is clearer:
         ' '*5 is clearer than ' ' * 5
         This is personal preference but I don't like to follow the
@@ -55,6 +66,7 @@ class TestCodeFormat(unittest.TestCase):
 
     def test_conformance_change_line_length(self):
         r"""Test conformity to PEP-8.
+
         Ignoring line length in statistics, and one line reaches 83 chars,
         but is much clearer on a single line.
         in blackjack a line reaches 80 chars
@@ -65,6 +77,8 @@ class TestCodeFormat(unittest.TestCase):
         style = pycodestyle.StyleGuide(quiet=False, ignore=['W503',
                                                             'E501'])
         result = style.check_files(['library/statistics.py',
-                                    'blackjack.py'])
+                                    'blackjack.py',
+                                    # test_user_selections is complex
+                                    'test/test_user_selections.py',])
         self.assertEqual(result.total_errors, 0,
                          'Found code style errors (and warnings).')
