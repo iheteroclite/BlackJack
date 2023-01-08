@@ -49,7 +49,7 @@ class People:
     def __str__(self, name, scored, multiple, bj_chance='', even_chance=''):
         wins = self.blackjack_wins + self.even_wins
 
-        return ('_' * 52
+        return ('\33[92m_\033[00m' * 52
                 + f'\n{name}, over {self.games} rounds {scored}:'
                 + f'\nWins: {wins} '
                 + f'({round(100 * wins / (self.games * multiple), 1)} %) '
@@ -209,7 +209,8 @@ class Dealer(People):
                         caught_msg = 'The card you played was a duplicate.'
         if caught_msg:
             player.caught = True
-            self.shout(player, caught_msg)
+
+            self.shout(player, f'\033[91m{caught_msg}\033[00m')
             self.ban(player, players, banned_players)
 
     def check_caught_blackjack(self, player):
@@ -234,11 +235,13 @@ class Dealer(People):
         return True if rand_score < caught_probability else False
 
     def shout(self, player, msg):
+                    # \033[91m♦\033[00m
         names = ['Twinkletoes', 'Ragamuffin', 'Ruffian', 'Pirate']
         name_index = randint(0, len(names) - 1)
-        print(f'{self.name} shouts {player.name.upper()}, I SEE YOU CHEATING!')
+        print(f'\033[93m{self.name} shouts \033[00m')
+        print(f'\033[91m{player.name.upper()}, I SEE YOU CHEATING!\033[00m')
         print(msg)
-        print(f'GET OUT of my CASINO, {names[name_index]}!')
+        print(f"\033[91mGET OUT of my CASINO, {names[name_index]}!\033[00m")
 
     def ban(self, player, players, banned_players):
         player_index = players.index(player)
