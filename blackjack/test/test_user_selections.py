@@ -94,7 +94,7 @@ class UserSelectionTestCase(TestCase):
 
     @mock.patch('blackjack.player_choice', create=True)
     @mock.patch('blackjack.check_twenty_one', return_value=False)
-    def test_player_receives_no_more_cards_on_stand(self, mock_check_21, mocked_input):
+    def test_player_receives_cards_and_score_on_stand(self, mock_check_21, mocked_input):
         # Create initialised values for test
         deck = Deck()
         dealer = Dealer(1, deck)

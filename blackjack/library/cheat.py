@@ -8,6 +8,7 @@ __all__ = ['cheat_setup, select_dealer, cheat_choice, card_in_deck']
 
 from library.io import print_cheat_info, print_chance_info, player_choice
 from library.io import get_screen_height
+from library.score import check_twenty_one
 
 
 def cheat_setup(players, dealer):
@@ -57,7 +58,7 @@ def select_dealer(dealer):
     dealer.set_coeff()
 
 
-def cheat_choice(player, now='now'):
+def cheat_choice(player, players_choose_ace, now='now'):
     # Check player wants to cheat
     cheat = player_choice(f'Do you want to cheat {now}?', 3,
                           ['Yes', 'No'],
@@ -80,12 +81,21 @@ def cheat_choice(player, now='now'):
 
         player.hand.cards[hand_index], player.sleeve.cards[sleeve_index] = (
             player.sleeve.cards[sleeve_index], player.hand.cards[hand_index])
+
         # TODO: test card marking
         player.sleeve.mark_cheat_cards()
         print(player.hand)
 
-        if now == 'now':
-            cheat_choice(player, now='again')
+        # Get result of cheating
+        cheat_result = check_twenty_one(player, players_choose_ace)
+
+        if cheat_result:
+            print(f'{player.name} you have {cheat_result}')
+            return True
+        elif now == 'now':
+            # Give option to cheat again
+            cheat_choice(player, players_choose_ace, now='again')
+        return False
 
 
 def card_in_deck(search_card, deck):
