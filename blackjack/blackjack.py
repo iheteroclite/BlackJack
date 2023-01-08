@@ -34,7 +34,7 @@ def play():
     banned_players = []
     cheat_setup(players, dealer)
 
-    # Play as many rounds as the player wants (emulating a do-while loop)
+    # Play as many rounds as the players want(emulating a do-while loop)
     while players:
         round(dealer, players, deck, ace_choice)
 
@@ -44,17 +44,21 @@ def play():
             if player.cheater:
                 dealer.try_catch(player, players, banned_players, deck)
         print(dealer)
+
+        # End the game if all players have been banned (for cheating)
+        if not players:
+            print('The dealer has kicked you out of the casino!')
+            break
+
+        # Ask if players want to play another round
         options = ['Play Another Round', 'Leave the Table']
         if player_choice(options=options) == options[0]:
-            if players:
-                # If deck has less than minimum cards, reshuffle
-                if len(deck.cards) < (min_decks * 52):
-                    deck = Deck(num_decks, ace=ace)
-                for player in players + [dealer]:
-                    player.reset(deck)
-                    player.hand.state = 'draw'
-            else:
-                print('The dealer has kicked you out of the casino!')
+            # If deck has less than minimum cards, reshuffle
+            if len(deck.cards) < (min_decks * 52):
+                deck = Deck(num_decks, ace=ace)
+            for player in players + [dealer]:
+                player.reset(deck)
+                player.hand.state = 'draw'
         else:
             # Leave the table (exit game)
             break
