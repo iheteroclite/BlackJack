@@ -41,10 +41,10 @@ def score_hand(player, dealer):
             elif score > dealer_score:
                 word = 'even_wins'
 
-    # Update player & dealer wins, losses and games counters
+    # Update player & dealer wins, losses and game rounds counters
     setattr(player, word, getattr(player, word) + 1)
     setattr(dealer, word, getattr(dealer, word) + 1)
-    player.games += 1
+    player.rounds += 1
 
     win_str = 'loses' if word == 'losses' else ' '.join(word.split('_')[::-1])
 

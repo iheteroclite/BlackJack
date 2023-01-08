@@ -171,8 +171,6 @@ def chance_with_fixed_percent(wins, rounds, prob_win=0.3742):
     Can be used to determine chance of push, win etc, where there is an
     approximate fixed expected change of that result (win/push).
     """
-    # TODO: this returns just the probability of that score, I'd like to return
-    # the probability of AT LEAST that score, or a +- sd
     prob_loss = (1 - prob_win)**(rounds - wins)
     return prob_win**wins * prob_loss * comb(rounds, wins)
 

@@ -39,8 +39,7 @@ class People:
         self.even_wins = 0
         self.losses = 0            # Includes bust, surrender, and loss
         self.pushes = 0
-        # TODO: change the name games to rounds for consistency
-        self.games = 0             # Number of rounds played
+        self.rounds = 0             # Number of rounds played
 
     def reset(self, deck):
         self.hands = [Hand(deck)]
@@ -50,9 +49,9 @@ class People:
         wins = self.blackjack_wins + self.even_wins
 
         return ('\33[92m_\033[00m' * 52
-                + f'\n{name}, over {self.games} rounds {scored}:'
+                + f'\n{name}, over {self.rounds} rounds {scored}:'
                 + f'\nWins: {wins} '
-                + f'({round(100 * wins / (self.games * multiple), 1)} %) '
+                + f'({round(100 * wins / (self.rounds * multiple), 1)} %) '
                 + f'with {self.blackjack_wins} blackjack {bj_chance}'
                 + f'and {self.even_wins} even payouts {even_chance}\n'
                 + f'Losses: {self.losses}       Pushes: {self.pushes}')
@@ -128,12 +127,12 @@ class Player(People):
         # self.chance_bj = 1 - self.probabilities[-1]['probability']
         self.chance_bj = chance_of_blackjack_totals(self.probabilities)
         self.chance_even = chance_with_fixed_percent(self.even_wins,
-                                                     self.games)
+                                                     self.rounds)
         # Probability of getting at least this many bj/win in rounds so far
         # This one is working:
         self.tot_chance_bj = chance_at_least_mean_blackjack(self.probabilities)
         self.tot_chance_even = chance_at_least_result(self.even_wins,
-                                                      self.games)
+                                                      self.rounds)
 
     def hide_cards(self):
         """Hide cards up player's sleeve so they can use them to cheat."""
@@ -219,9 +218,9 @@ class Dealer(People):
         return self.check_caught(1 - chance)
 
     def check_caught_even(self, player):
-        mean = chance_with_fixed_percent(player.even_wins, rounds=self.games)
-        sd = standard_dev_fixed_percent(self.games)
-        win_rate = player.even_wins/self.games
+        mean = chance_with_fixed_percent(player.even_wins, rounds=self.rounds)
+        sd = standard_dev_fixed_percent(self.rounds)
+        win_rate = player.even_wins/self.rounds
 
         coef = chance_caught_with_normal_dist(mean, sd, win_rate)
 

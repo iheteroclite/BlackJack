@@ -36,7 +36,6 @@ def cheat_setup(players, dealer):
             else:
                 break
 
-        # TODO: Pass to next player
         player_choice('Pass to next player?', 3, ['OK'])
         print('\n' * get_screen_height())
 
@@ -82,7 +81,6 @@ def cheat_choice(player, players_choose_ace, now='now'):
         player.hand.cards[hand_index], player.sleeve.cards[sleeve_index] = (
             player.sleeve.cards[sleeve_index], player.hand.cards[hand_index])
 
-        # TODO: test card marking
         player.sleeve.mark_cheat_cards()
         print(player.hand)
 

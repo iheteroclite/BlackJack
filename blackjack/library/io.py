@@ -28,13 +28,13 @@ def card_string(cards):
                       suits_two, pads * tot, suits_str, bottom * tot])
 
 
-def player_choice(
-        msg="", i=0, options=['hit', 'stand', 'surrender'], player=False,):
-    # TODO: tidy this
+def player_choice(msg="", i=0,
+                  options=['hit', 'stand', 'surrender'],
+                  player=False,):
+
     bits = [', What do you do?', 'Select number of ', ' are you ready?', ' ']
     questions = [inquirer.List('choice',
-                 message=f'{player.name}{bits[i]}{msg}' if player
-                               else f'{bits[i]}{msg}',
+                 message=f"{player.name if player else ''}{bits[i]}{msg}",
                  choices=options)]
     return inquirer.prompt(questions)['choice']
 
@@ -78,7 +78,7 @@ def print_chance_info():
           + '% chance on a hand is the percentage chance you had of getting '
           + 'that hand this round.\n'
           + '% chance on a win is the percentage chance that a player would '
-          + 'get at least as many wins as you have over that many games.\n'
+          + 'get at least as many wins as you have over that many rounds.\n'
           + '\u03C3 means Standard Deviation, a measure of how far away from '
           + 'the mean your results are. Within 1\u03C3 is completely normal, '
           + "and won't arouse suspicion, whereas 3\u03C3 from the mean is "

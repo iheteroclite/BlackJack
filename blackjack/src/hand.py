@@ -11,7 +11,6 @@ from library.io import card_string
 class Hand:
     def __init__(self, deck, dealer=False):
         self.cards = deck.draw(2)
-        # TODO take user input for value of 'player'
         self.dealer = dealer
         self.state = 'draw'     # records blackjack, twenty-one, bust
         self.success = 'tbd'

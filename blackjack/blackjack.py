@@ -133,7 +133,7 @@ def game_round(dealer, players, deck, players_choose_ace):
         stat_str = f' (with {round(stat * 100, 1)} % chance)' if stat else ''
         success_str = f"{success.upper()}{stat_str}"
         print(f"{player.name} scored {player.hand.state}, {success_str}")
-    dealer.games += 1
+    dealer.rounds += 1
 
 
 def game_setup():
