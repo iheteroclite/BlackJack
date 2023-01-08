@@ -88,13 +88,19 @@ def round(dealer, players, deck, players_choose_ace):
                 # Get user input: hit, stand, surrender [or cheat]
                 player_move = ''
                 if isinstance(player, Player):
+                    result = check_twenty_one(player,
+                                              players_choose_ace)
+                    if result:
+                        print(f'{player.name} you have {result}')
+                        # Go to next player if player's turn is over
+                        continue
                     if player.cheater:
                         cheat_choice(player)
                         # Check blackjack, 21, or bust AGAIN
-                        result = check_twenty_one(player,
-                                                  players_choose_ace)
+                        cheat_result = check_twenty_one(player,
+                                                        players_choose_ace)
                         if result:
-                            print(f'{player.name} you have {result}')
+                            print(f'{player.name} you have {cheat_result}')
                             # Go to next player if player's turn is over
                             continue
                     player_move = player_choice(player=player)

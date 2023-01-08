@@ -1,3 +1,7 @@
+"""Tests to ensure probabilities are correctly calculated
+
+To run cli tests: $ python3 -m unittest discover test
+"""
 __version__ = 0.40
 __author__ = 'iheteroclite'
 
