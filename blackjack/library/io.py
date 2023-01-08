@@ -84,5 +84,6 @@ def print_chance_info():
           + "and won't arouse suspicion, whereas 3\u03C3 from the mean is "
           + 'very abnormal.')
 
+
 def goodbye():
     print('Hope you have had a wonderful time playing. Goodbye!')

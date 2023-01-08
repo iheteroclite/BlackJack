@@ -23,33 +23,19 @@ from library.io import get_screen_height, goodbye
 
 
 def play():
-    # Setup number of players and ace value
-    num_players = player_choice("players", 1, [n + 1 for n in range(5)])
-    print('Number of players selected was:', num_players)
-    player_ace = 'Player chooses'
-    ace_qn = "Select the value of player's Aces"
-    ace_value = player_choice(ace_qn, 3, [1, 11, player_ace])
-    ace = ace_value if ace_value == 1 else 11
 
-    # Make a deck
-    # min_decks ensures there's at least 1 deck per 4 players
-    min_decks = 2 if num_players > 4 else 1
-    num_decks = player_choice("decks", 1, [n + min_decks for n in range(8)])
-    print('Number of decks selected was:', num_decks)
-    deck = Deck(num_decks, ace=ace)
-
-    # Initialise Players and Dealer
-    # TODO: could add an option to load player save from file?
-    dealer = Dealer(num_players, deck)
-    players = [Player(deck, f'Player {x + 1}') for x in range(num_players)]
-    banned_players = []
+    # Setup the basic game
+    # Initialise: list of players, the dealer, the deck, the number of decks,
+    # the ace (1 or 11), and ace_choice a bool for players choosing ace value.
+    players, dealer, deck, num_decks, min_decks, ace, ace_choice = game_setup()
 
     # Check if player wants to cheat
+    banned_players = []
     cheat_setup(players, dealer)
 
     # Play as many rounds as the player wants (emulating a do-while loop)
     while True:
-        round(dealer, players, deck, ace_value == player_ace)
+        round(dealer, players, deck, ace_choice)
 
         for player in players:
             print(player)
@@ -67,7 +53,6 @@ def play():
                 player.hand.state = 'draw'
         else:
             # Leave the table (exit game)
-            goodbye()
             break
 
 
@@ -168,7 +153,7 @@ def score_hand(player, dealer):
     return 'loses' if word == 'losses' else ' '.join(word.split('_')[::-1])
 
 
-def check_twenty_one(player, ace_choice=False, num=False, state='playing'):
+def check_twenty_one(player, ace_choice=False):
     hand = player.hand
     total = hand.get_total()
     if total == 21:
@@ -200,6 +185,45 @@ def check_twenty_one(player, ace_choice=False, num=False, state='playing'):
     return False
 
 
+def game_setup():
+    """Get play input and setup the game
+
+    Returns:
+    players -- a list of players of the Player class
+    dealer -- a dealer of the Dealer class
+    deck -- the deck to start play with
+    num_decks -- the number of 52 card decks which make up the deck
+    min_decks -- the minimum number of decks so that the deck will never be
+                 completely depleted during a game. When the number of cards
+                 is less than min_decks * 52, the deck should reset
+    ace -- the initial ace vale (either 1 or 11)
+    ace_choice -- a bool denoting whether players have the choice of
+                  the value of the aces in their hand
+    """
+    # Setup number of players and ace value
+    num_players = player_choice("players", 1, [n + 1 for n in range(5)])
+    print('Number of players selected was:', num_players)
+    player_ace = 'Player chooses'
+    ace_qn = "Select the value of player's Aces"
+    ace_value = player_choice(ace_qn, 3, [1, 11, player_ace])
+    ace = ace_value if ace_value == 1 else 11
+    ace_choice = ace_value == player_ace
+
+    # Make a deck
+    # min_decks ensures there's at least 1 deck per 4 players
+    min_decks = 2 if num_players > 4 else 1
+    num_decks = player_choice("decks", 1, [n + min_decks for n in range(8)])
+    print('Number of decks selected was:', num_decks)
+    deck = Deck(num_decks, ace=ace)
+
+    # Initialise Players and Dealer
+    # TODO: could add an option to load player save from file?
+    dealer = Dealer(num_players, deck)
+    players = [Player(deck, f'Player {x + 1}') for x in range(num_players)]
+
+    return players, dealer, deck, num_decks, min_decks, ace, ace_choice
+
+
 def dealer_move(hand, num):
     if hand.get_total() >= num:
         return 'stand'
@@ -209,3 +233,4 @@ def dealer_move(hand, num):
 if __name__ == '__main__':
     welcome()
     play()
+    goodbye()
