@@ -83,3 +83,6 @@ def print_chance_info():
           + 'the mean your results are. Within 1\u03C3 is completely normal, '
           + "and won't arouse suspicion, whereas 3\u03C3 from the mean is "
           + 'very abnormal.')
+
+def goodbye():
+    print('Hope you have had a wonderful time playing. Goodbye!')

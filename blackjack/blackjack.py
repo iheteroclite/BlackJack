@@ -19,7 +19,7 @@ from src.deck import Deck
 from src.people import Dealer, Player
 from library.cheat import cheat_setup, cheat_choice
 from library.io import welcome, player_choice
-from library.io import get_screen_height
+from library.io import get_screen_height, goodbye
 
 
 def play():
@@ -67,6 +67,7 @@ def play():
                 player.hand.state = 'draw'
         else:
             # Leave the table (exit game)
+            goodbye()
             break
 
 

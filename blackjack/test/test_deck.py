@@ -24,25 +24,19 @@ class DeckTestCase(unittest.TestCase):
         pass
 
     def test_number_of_cards(self):
-        # TODO*: change this to vary num_decks from 1 to 8
-        number_of_cards = len(self.deck.cards)
+        decks = [Deck(d) for d in range(1, 8)]
         # check there's up to 8 decks in the deck
-        self.assertTrue(number_of_cards in [52 * n for n in range(8)])
+        for no_of_decks in range(1, 8):
+            deck = Deck(no_of_decks)
+            number_of_cards = len(deck.cards)
+            with self.subTest(no_of_decks=no_of_decks):
+                self.assertEqual(number_of_cards, 52 * no_of_decks)
 
     def test_cards_integer_value(self):
         for card in self.deck.cards:
             with self.subTest(fail_card=f"{card.suit}, {card.face}"):
                 self.assertTrue((1 <= card.value <= 11)
                                 and (card.value % 1 == 0))
-
-    def test_player_auto_names(self):
-        num_players = 4
-        players = ''
-        for i in range(num_players):
-            player_str = f'Player {i + 1}'
-            player = Player(self.deck, player_str)
-            players += player.name
-        self.assertEqual(players, 'Player 1Player 2Player 3Player 4')
 
     def test_number_deck_cards_after_draws(self):
         num_players = 2

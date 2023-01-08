@@ -200,7 +200,7 @@ Another interesting extension could include the possibility for the dealer to ac
 
 #### Important note on Probabilities
 
-I, @iheteroclite, the author, am not a Statistician, and was surprised that the chance of drawing blackjack from a specific deck is not well-modelled (until I tried to model it). After pages of derivations and attempts at deriving a good hypergeometric density function (which had an asymptope at 1, so was not useful for this game), I concluded that a good model would suffice. I have tested this model with Mathematica, and it seems to be a good model, the probability of blackjack: decreases as aces and tens in the deck decrease; increases as deck size decreases; is 0 when there are no aces or no tens; and approaches 0.5 when there are exactly 50/50 aces/tens. However, it is entirely possible that there may be unforseen limitations of the model I have used.
+I, @iheteroclite, the author, am not a Statistician, I have read Physics (which is a poor approximation), and was surprised that the chance of drawing blackjack from a specific deck is not well-modelled (until I tried to model it). After pages of derivations and attempts at deriving a good hypergeometric density function (for which mine had an asymptope at 1, so was not useful for this game), I concluded that a good model would suffice. I have tested this model with Mathematica, and it seems to be a good model, the probability of blackjack: decreases as aces and tens in the deck decrease; increases as deck size decreases; is 0 when there are no aces or no tens; and approaches 0.5 when there are exactly 50/50 aces/tens. However, it is entirely possible that there may be unforseen limitations of the model I have used.
 
 Probability of a blackjack is modelled using a binomial distribution mass function, with an alteration made to account for a varying probability of getting a blackjack each turn.
 
@@ -251,9 +251,9 @@ chance_win - chance_blackjack = chance_even_odds_win
 
 The chance to get B blackjacks in R rounds is calculated as
 
-           N                 N                     rounds
-P(k)    PRODUCT  p(k)  *  PRODUCT [1 - p(k)]  * ( bj_count )
-          k=1               k=1
+          N                 N                     rounds
+P(k) = PRODUCT  p(k)  *  PRODUCT [1 - p(k)]  * ( bj_count )
+         k=1               k=1
 
 The last term is rounds choose bj_count where bj_count is the number of blackjacks this turn.
 
@@ -264,3 +264,5 @@ B! (D - B)!
 where:
 B = number of blackjacks you have got so far (denoted bj_count)
 D = the number of initial deals so far (denoted deck_count)
+
+The chance to get at leat B blackjacks in R rounds is calculated as 1 (100%) minus the sum of the chances of getting less than B blackjacks.

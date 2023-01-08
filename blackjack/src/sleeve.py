@@ -1,4 +1,4 @@
-"""The sleeve holds all hidden cards that the user may wish to use when cheating.
+"""The sleeve holds all hidden cards that the user may use when cheating.
 
 Every cheat needs a long sleeve, and this is yours!
 
