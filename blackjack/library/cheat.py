@@ -1,6 +1,5 @@
-from src.deck import Card
 from library.io import print_cheat_info, print_chance_info, player_choice
-from library.io import card_string, get_screen_height
+from library.io import get_screen_height
 
 
 def cheat_setup(players, dealer):
@@ -29,7 +28,7 @@ def cheat_setup(players, dealer):
                 break
 
         # TODO: Pass to next player
-        player_choice(f'Pass to next player?', 3, ['OK'])
+        player_choice('Pass to next player?', 3, ['OK'])
         print('\n' * get_screen_height())
 
     if players_are_cheating:
@@ -37,7 +36,7 @@ def cheat_setup(players, dealer):
 
 
 def select_dealer(dealer):
-    query = f'Players, Select a Dealer (hardest first)'
+    query = 'Players, Select a Dealer (hardest first)'
     options = ['Big Brother',
                'Casino Cat',
                'Sharp-Eyed Stacy',
@@ -52,14 +51,17 @@ def select_dealer(dealer):
 
 def cheat_choice(player, now='now'):
     # Check player wants to cheat
-    cheat = player_choice(f'Do you want to cheat {now}?', 3, ['Yes', 'No'], player)
+    cheat = player_choice(f'Do you want to cheat {now}?', 3,
+                          ['Yes', 'No'],
+                          player)
     if cheat == 'Yes':
         print(player.sleeve)
 
         # Ask player which card in their hand to swap
         hand_choices = [card.__str__() for card in player.hand.cards]
         hand_card = player_choice('Which hand card do you swap?', 3,
-                                  hand_choices, player)
+                                  hand_choices,
+                                  player)
         hand_index = hand_choices.index(hand_card)
 
         # Ask player which card in their sleeve to swap
@@ -84,5 +86,3 @@ def card_in_deck(search_card, deck):
         if card.face == search_card.face and card.suit == search_card.suit:
             copies_in_deck += 1
     return copies_in_deck
-
-

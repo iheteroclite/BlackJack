@@ -7,32 +7,11 @@ __version__ = 0.36
 __author__ = 'iheteroclite'
 
 import unittest
-import pycodestyle
-import random
 
 from src.deck import Deck, Card, suits, faces
 from src.hand import Hand
 from src.people import Player, Dealer
 from blackjack import check_twenty_one, score_hand
-
-
-class TestCodeFormat(unittest.TestCase):
-
-    def test_conformance(self):
-        r"""Test conformity to PEP-8.
-
-        'E722' (bare except) ignored as this use case is in python3 docs
-        'W503' (line break before binary operator) ignored as recent (2022)
-        PEG-8 style guide prescribes avoidance of backslash \ for line
-        continuation, and now allows/suggests mathematical long addition format
-        """
-        style = pycodestyle.StyleGuide(quiet=False, ignore=['E722',
-                                                            'W503', 'E226'])
-        result = style.check_files(['blackjack.py', 'src/hand.py',
-                                    'src/deck.py', 'library/statistics.py',
-                                    'test/test_deck.py', 'src/people.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
 
 
 class DeckTestCase(unittest.TestCase):
@@ -58,9 +37,12 @@ class DeckTestCase(unittest.TestCase):
 
     def test_player_auto_names(self):
         num_players = 4
+        players = ''
         for i in range(num_players):
             player_str = f'Player {i + 1}'
             player = Player(self.deck, player_str)
+            players += player.name
+        self.assertEqual(players, 'Player 1Player 2Player 3Player 4')
 
     def test_number_deck_cards_after_draws(self):
         num_players = 2
@@ -92,7 +74,6 @@ class DeckTestCase(unittest.TestCase):
         aces = [Card(suits[1], faces[0])]
         aces.append(Card(suits[1], faces[0], 1))
         aces.append(Card(suits[1], faces[0], 11))
-        values = [ace.value for ace in aces]
         for i, x in enumerate([1, 11, 1]):
             aces[i].set_ace_value(x)
             with self.subTest(ace=(f'index {i}, value {x}')):
@@ -122,7 +103,6 @@ class DeckTestCase(unittest.TestCase):
         Uses the hand.get_score() method to calculate score.
         """
         hand = Hand(self.deck)
-        initial_score = hand.get_total()
 
         hand.cards += [Card(suits[2], 7)]
         first_score = hand.get_total()
@@ -147,19 +127,19 @@ class DeckTestCase(unittest.TestCase):
             player.hand.cards = [Card(suits[0], 10), Card(suits[0], 10),
                                  Card(suits[1], score)]
             check_twenty_one(player)
-            with self.subTest(score=score+20):
+            with self.subTest(score=score + 20):
                 self.assertIs(player.hand.state, 'bust')
 
     def test_king_and_ace_equals_blackjack(self):
         player = Player(self.deck, 'Alex')
         player.hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Ace')]
-        score = check_twenty_one(player)
+        check_twenty_one(player)
         self.assertEqual(player.hand.state, 'blackjack')
 
     def test_king_queen_ace_equals_21(self):
         player = Player(self.deck, 'Jo')
         player.hand.cards = [Card(suits[0], 'King'), Card(suits[0], 'Queen'),
-                      Card(suits[0], 'Ace', 1)]
+                             Card(suits[0], 'Ace', 1)]
         player.hand.state = 'playing'
         check_twenty_one(player)
         self.assertEqual(player.hand.state, 21)

@@ -4,15 +4,11 @@ __author__ = 'iheteroclite'
 import unittest
 import random
 
-from src.deck import Deck, Card, suits, faces
-from src.people import Player
-from blackjack import check_twenty_one
+from src.deck import Deck, Card, faces
 from library.statistics import chance_of_blackjack_totals
-from library.hypergeometric_distribution import chance_n_blackjack_total
 from library.statistics import chance_with_fixed_percent
-from library.statistics import chance_at_least_blackjack_totals
+from library.statistics import chance_at_least_mean_blackjack
 from library.statistics import chance_of_single_blackjack
-from library.statistics import  chance_at_least_fixed_percent_blackjack
 
 
 class StatisticsTestCase(unittest.TestCase):
@@ -74,33 +70,29 @@ class StatisticsTestCase(unittest.TestCase):
                 chance = round(chance_of_single_blackjack(deck), 3)
                 self.assertTrue(chance in probs)
 
-    def test_chance_at_least_blackjack_totals_unity(self):
+    def test_chance_blackjack_totals_unity(self):
         results = [{
            'probability': 1,
            'blackjack': random.getrandbits(1),
            } for i in range(10)]
 
-        chance = chance_of_blackjack_totals(results, at_least=True)
+        chance = chance_at_least_mean_blackjack(results)
         self.assertEqual(chance, 1)
 
-    # def test_chance_at_least_blackjack_totals(self):
-    #     bjs = [True, False] * 5
-    #     probs = [1,0] * 5
-    #     results = [{
-    #        'probability': probs[i],
-    #        'blackjack': bjs[i],
-    #        } for i in range(10)]
+    # TODO: don't know whether this test works!
+    def test_chance_at_least_mean_blackjack_half(self):
+        bjs = [True, False] * 5
+        probs = [1, 0] * 5
+        results = [{
+           'probability': probs[i],
+           'blackjack': bjs[i],
+           } for i in range(10)]
 
-    #     rounds = len(results)
-    #     bj_count = 5
-    #     bj_wins = [0.5] * 5
-    #     not_bjs = [0.5] * 5
+        chance = chance_at_least_mean_blackjack(results)
 
-    #     chance = chance_at_least_blackjack_totals(results)
+        self.assertGreater(chance, 0.5)
 
-    #     self.assertGreater(chance, 0.5)
-
-    def test_chance_at_least_blackjack_totals_one_bj(self):
+    def test_chance_at_least_mean_blackjack_one_bj(self):
         results = [{
            'probability': 0.048,
            'blackjack': False,
@@ -108,14 +100,12 @@ class StatisticsTestCase(unittest.TestCase):
 
         results[0]['blackjack'] = True
 
-        print(results)
-
-        chance =  chance_at_least_fixed_percent_blackjack(results)
+        chance = chance_at_least_mean_blackjack(results)
 
         self.assertLess(chance, 0.999)
         self.assertGreater(chance, 0.001)
 
-    def test_chance_at_least_blackjack_totals__fixed_50_percent_bj(self):
+    def test_chance_at_least_mean_blackjack__fixed_50_percent_bj(self):
         results = [{
            'probability': 0.5,
            'blackjack': False,
@@ -123,14 +113,12 @@ class StatisticsTestCase(unittest.TestCase):
 
         results[0]['blackjack'] = True
 
-        print(results)
-
-        chance =  chance_at_least_fixed_percent_blackjack(results)
+        chance = chance_at_least_mean_blackjack(results)
 
         self.assertLess(chance, 0.999)
         self.assertGreater(chance, 0.001)
 
-    def test_chance_at_least_blackjack_totals_two_bj(self):
+    def test_chance_at_least_mean_blackjack_two_bj(self):
         results = [{
            'probability': 0.048,
            'blackjack': False,
@@ -139,9 +127,7 @@ class StatisticsTestCase(unittest.TestCase):
         results[0]['blackjack'] = True
         results[-1]['blackjack'] = True
 
-        print(results)
-
-        chance =  chance_at_least_fixed_percent_blackjack(results)
+        chance = chance_at_least_mean_blackjack(results)
 
         self.assertLess(chance, 0.999)
         self.assertGreater(chance, 0.001)

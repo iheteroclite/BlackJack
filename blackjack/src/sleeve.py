@@ -6,6 +6,7 @@ from random import randint
 from library.io import card_string, player_choice
 from src.deck import faces, suits, Card
 
+
 class Sleeve:
     def __init__(self, name):
         self.name = name

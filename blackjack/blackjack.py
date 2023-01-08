@@ -2,11 +2,11 @@ __version__ = 0.36
 __author__ = 'iheteroclite'
 
 from src.deck import Deck
-from src.hand import Hand
 from src.people import Dealer, Player
 from library.cheat import cheat_setup, cheat_choice
-from library.io import welcome, player_choice, print_chance_info
+from library.io import welcome, player_choice
 from library.io import get_screen_height
+
 
 def play():
     # Setup number of players and ace value
@@ -172,11 +172,14 @@ def check_twenty_one(player, ace_choice=False, num=False, state='playing'):
                 ordinal = ('st' if i == 1 else 'nd' if i == 2
                            else 'rd' if i == 3 else 'th')
                 val_qn = f"Your {i}{ordinal} card is an Ace. Select its value"
-                ace_is_1 = player_choice(val_qn, 3, [1, 11]) == 1
-                if hand.dealer or (ace_choice and ace_is_1):
-                    card.set_ace_value(1)
-                    if hand.get_total() <= 21:   # re-check after changing ace
-                        return check_twenty_one(player)
+
+                if isinstance(player, Player) and ace_choice:
+                    ace_to_1 = player_choice(val_qn, 3, [1, 11]) == 1
+                    if ace_to_1:
+                        card.set_ace_value(1)
+                        if hand.get_total() <= 21:
+                            # re-check after changing ace
+                            return check_twenty_one(player)
         hand.state = 'bust'
         return 'bust'
     return False

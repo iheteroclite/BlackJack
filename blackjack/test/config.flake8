@@ -13,11 +13,20 @@ exclude =
 
 per-file-ignores =
     # imported but unused
-    __init__.py: F401
+    __init__.py: F401,
+    # blackjack.py has a line that is better >79 chars
+    blackjack.py:E501,
+    # statistics.py has a line that is better >79 chars
+    statistics.py:E501,
+    # Bare accept is used this way in the python3 docs
+    blackjack/src/deck.py:E722,
+    # Variable hands is used to initialise the drawn hands
+    # In unittests variables are quickly destroyed
+    blackjack/test/test_deck.py:F841
 
 show_source = True
 
-require-plugins =
-    flake8-2020
-    flake8-typing-extensions
+count = True
+
+
 

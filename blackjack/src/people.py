@@ -3,7 +3,6 @@ __author__ = 'iheteroclite'
 
 from random import randint, random
 
-from src.deck import Card
 from src.hand import Hand
 from src.sleeve import Sleeve
 from library.statistics import chance_of_single_blackjack
@@ -12,15 +11,12 @@ from library.statistics import chance_of_blackjack_totals
 from library.statistics import chance_with_fixed_percent
 from library.statistics import standard_dev_fixed_percent
 from library.statistics import chance_caught_with_normal_dist
-from library.statistics import chance_at_least_fixed_percent_blackjack
-from library.statistics import chance_at_least_blackjack_totals
-from library.io import player_choice
+from library.statistics import chance_at_least_mean_blackjack
 from library.cheat import card_in_deck
 
 
 class People:
     """SuperClass the Player and Dealer SubClasses."""
-
 
     def __init__(self, deck, name):
         self.name = name
@@ -87,11 +83,7 @@ class Player(People):
         # Strings to add for displaying player probabilities
         bj = ''
         even = ''
-        # TODO: make this do both?
-        # for chance in [bj, 'chance_even']:
-        #     if self[chance]:
-        #         perc = round((self[chance] * 100), 1)
-        #         tot_perc = round((self['tot_' + chance] * 100), 1)
+
         self.calculate_probability()
 
         bj_perc = round((self.chance_bj * 100), 1)
@@ -100,7 +92,6 @@ class Player(People):
         bj = (f'(at {bj_perc} % chance)\n' + ' '*16
               + f'[with {tot_bj_perc} % chance of at '
               + f'least {self.blackjack_wins}]\n' + ' '*16)
-
 
         even_perc = round((self.chance_even * 100), 1)
         tot_even_perc = round((self.tot_chance_even * 100), 1)
@@ -121,15 +112,16 @@ class Player(People):
 
     def calculate_probability(self):
         # Probability of getting exactly this many bj/win in rounds so far
-        # TODO*: probability of this hand getting what it got
+        # TODO: chance this round
         # self.chance_bj = 1 - self.probabilities[-1]['probability']
         self.chance_bj = chance_of_blackjack_totals(self.probabilities)
         self.chance_even = chance_with_fixed_percent(self.even_wins,
                                                      self.games)
         # Probability of getting at least this many bj/win in rounds so far
-        self.tot_chance_bj = chance_at_least_blackjack_totals(self.probabilities)
         # This one is working:
-        self.tot_chance_bj = chance_at_least_fixed_percent_blackjack(self.probabilities)
+        self.tot_chance_bj = chance_at_least_mean_blackjack(self.probabilities)
+        self.tot_chance_even = chance_at_least_result(self.even_wins,
+                                                      self.games)
 
     def hide_cards(self):
         """Hide cards up player's sleeve so they can use them to cheat."""
@@ -180,9 +172,8 @@ class Dealer(People):
         """Check if the player has been caught (or assumed) cheating.
 
         """
-        # TODO
-        # Setup constant probability ratios (which could be a future user setting)
-        # Player will always be caught with duplicate cards in a casino (1.25*0.8= 1)
+        # Player will always be caught with duplicate cards in a casino
+        # always caught: 1.25 * 0.8 = 1
         caught_msg = ''
         prob_caught_card_coef = 1.25
         prob_caught_patdown_coef = 0.1
@@ -193,13 +184,13 @@ class Dealer(People):
                 caught_msg = "I'm patting you down, oh look, cards!"
         elif self.check_caught_even(player):
             # Caught due to unlikely/impossibly high win rate
-            caught_msg = "You're so suspicious, winning all the time"
+            caught_msg = "You're so suspicious, winning all the time."
         elif self.check_caught_blackjack(player):
             # Caught due to unlikely/impossibly high blackjack rate
-            caught_msg = "You're so suspicious, getting blackjack all the time"
+            caught_msg = "You're so suspicious, getting so many blackjacks."
         else:
-        # If card has already been played, it is not in deck (duplicate)
-        # TODO: write a test case for this
+            # If card has already been played, it is not in deck (duplicate)
+            # TODO: write a test case for this
             for card in player.hand.cards:
                 if card.cheat_card and not card_in_deck(card, deck):
                     if self.check_caught(prob_caught_card_coef):
@@ -211,7 +202,7 @@ class Dealer(People):
 
     def check_caught_blackjack(self, player):
         # TODO: player already calculates this
-        chance = chance_of_blackjack_totals(player.probabilities, at_least=True)
+        chance = chance_at_least_mean_blackjack(player.probabilities)
         return self.check_caught(1 - chance)
 
     def check_caught_even(self, player):
@@ -232,7 +223,7 @@ class Dealer(People):
 
     def shout(self, player, msg):
         names = ['Twinkletoes', 'Ragamuffin', 'Ruffian', 'Pirate']
-        name_index = randint(0,len(names) - 1)
+        name_index = randint(0, len(names) - 1)
         print(f'{self.name} shouts {player.name.upper()}, I SEE YOU CHEATING!')
         print(msg)
         print(f'GET OUT of my CASINO, {names[name_index]}!')
