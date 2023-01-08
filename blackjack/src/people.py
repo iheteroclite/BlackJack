@@ -1,4 +1,15 @@
-__version__ = 0.36
+"""People classes in the game of blackjack.
+
+The people superclass initiates attributes which are common between players
+and dealers (e.g they both have a name and a hand). The player subclass
+represents a blackjack player who can choose to hit, stand, or surrender.
+
+The dealer has hard-coded difficulty co-efficients, but in future versions
+these could be selectable at the beginning of game. The dealer can try to
+catch players cheting, shout at the players and ban them from the game.
+"""
+
+__version__ = 0.40
 __author__ = 'iheteroclite'
 
 from random import randint, random

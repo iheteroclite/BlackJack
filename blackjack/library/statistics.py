@@ -1,4 +1,21 @@
-__version__ = 0.36
+"""A library for statistical calculations in blackjack.
+
+Each round this game will display probabilities.
+
+The probabilities are:
+* If the player got a win or blackjack this round:
+  Probability of getting a win (even win or blackjack) this particular
+  round.
+* Probabiity of gettting the exact number of wins the player has in
+  the exact number of rounds the player has played.
+* Probability of getting at least the number of wins the player has,
+  in the same number of rounds.
+
+For examples and use-cases please see the blackjack project README.md
+
+"""
+
+__version__ = 0.40
 __author__ = 'iheteroclite'
 
 from math import erf, prod, comb, sqrt

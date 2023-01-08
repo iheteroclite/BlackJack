@@ -1,5 +1,8 @@
 """This library provides various input and output functions for blackjack."""
 
+__version__ = 0.40
+__author__ = 'iheteroclite'
+
 import inquirer
 from os import get_terminal_size
 

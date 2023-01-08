@@ -80,7 +80,10 @@ Players have the option to cheat! This means that at the beginning of the game t
    Help me with Cheating
    Help me with Probability`
 
-If you choose to cheat you can swap a cards in your hand with cards hidden up your sleeve. Watch out, there are various ways the dealer might catch you:
+If you choose to cheat you can swap a cards in your hand with cards hidden up your sleeve. Every card which goes into your sleeve is marked, so the dealer if they
+suspect you of cheating will have some probability of noticing it is marked.
+
+Watch out, there are various ways the dealer might catch you:
 
 * The card you played was a duplicate. It has already been played, and the dealer noticed.
 * You look suspicious because you have a high rate of even wins (not blackjack)
@@ -140,7 +143,8 @@ Each dealer has a different chance of catching you cheating, so if you want to j
 
 ### Potential Extentions
 
-A month ago I envisaged this game being ported to a Django app, with authenticated users equivalent to players, and
+A month ago I initially envisaged this game being ported to a Django app, with authenticated users equivalent to players, and stored gameplay data in a many-to-many
+sql database (with a Django implementation of SQLLite). I had envisioned multiple players could play on the server (separate terminals), and see a Single Page Application
 
 This game could be very easily extended to also catch card counting (but as I do not know how unlikely your hand has to be for a casino to suspect you of cheating, this has not yet been programmed).
 

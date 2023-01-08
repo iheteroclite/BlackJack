@@ -1,4 +1,7 @@
-__version__ = 0.36
+"""Class for the hand of player and the dealer in the game of blackjack.
+"""
+
+__version__ = 0.40
 __author__ = 'iheteroclite'
 
 from library.io import card_string

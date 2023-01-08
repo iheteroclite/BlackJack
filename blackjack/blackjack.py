@@ -1,5 +1,19 @@
-__version__ = 0.36
+"""The American Casino game blackjack / 21
+In this game you will have the option to play with friends using
+multiple decks, and if you want to, you can try to cheat. But watch
+out: you can get caught if the dealer sees you, or even in a random
+pat-down, or if the card you cheat with has already been played.
+You can select your difficulty level by choosing different dealers,
+but the chance of being caught will always increase as the statistical
+liklihood of your success rate decreases - so try not to win every game.
+"""
+
+__version__ = 0.4.0
 __author__ = 'iheteroclite'
+__all__ = 'Dealer', 'Deck', 'Player', 'cheat_choice', 'cheat_setup',
+          'check_twenty_one', 'dealer_move', 'get_screen_height',
+          'play', 'player_choice', 'round', 'score_hand', 'welcome'
+
 
 from src.deck import Deck
 from src.people import Dealer, Player

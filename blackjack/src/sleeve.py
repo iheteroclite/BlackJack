@@ -1,4 +1,13 @@
-__version__ = 0.36
+"""The sleeve holds all hidden cards that the user may wish to use when cheating.
+
+Every cheat needs a long sleeve, and this is yours!
+
+During a game, if a player decies to cheat they would hide cards up their
+sleeve, then swap them with cards later in the game. The cards that the player
+used are now marked.
+"""
+
+__version__ = 0.40
 __author__ = 'iheteroclite'
 
 from random import randint

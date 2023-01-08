@@ -1,4 +1,10 @@
-__version__ = 0.36
+"""Classes required for creating a deck and populating it with cards.
+
+This is made specifically for the game of blackjack, where aces can be
+worth 1 or 11.
+"""
+
+__version__ = 0.40
 __author__ = 'iheteroclite'
 
 from random import shuffle
