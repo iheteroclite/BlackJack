@@ -12,8 +12,7 @@ __version__ = 0.40
 __author__ = 'iheteroclite'
 __all__ = ['Dealer', 'Deck', 'Player', 'cheat_choice', 'cheat_setup',
            'check_twenty_one', 'dealer_move', 'get_screen_height',
-           'play', 'player_choice', 'round', 'score_hand', 'welcome']
-
+           'play', 'player_choice', 'game_round', 'score_hand', 'welcome']
 
 from src.deck import Deck
 from src.people import Dealer, Player
@@ -36,7 +35,7 @@ def play():
 
     # Play as many rounds as the players want(emulating a do-while loop)
     while players:
-        round(dealer, players, deck, ace_choice)
+        game_round(dealer, players, deck, ace_choice)
 
         for player in players:
             print(player)
@@ -64,7 +63,7 @@ def play():
             break
 
 
-def round(dealer, players, deck, players_choose_ace):
+def game_round(dealer, players, deck, players_choose_ace):
     # Players' turns
     # TODO*: turn player into person here, for clarity
     for i, player in enumerate(players + [dealer]):
@@ -109,6 +108,7 @@ def round(dealer, players, deck, players_choose_ace):
                             continue
                     player_move = player_choice(player=player)
                 else:
+                    # Dealer hits on 17
                     player_move = dealer_move(dealer.hand, 17)
 
                 print(player_move)
@@ -129,8 +129,10 @@ def round(dealer, players, deck, players_choose_ace):
 
     for player in players:
         # success is the win type (blackjack, even), loss, or push
-        success = score_hand(player, dealer)
-        print(f"{player.name} scored {player.hand.state}, {success.upper()}")
+        success, stat = score_hand(player, dealer)
+        stat_str = f' (with {round(stat * 100, 1)} % chance)' if stat else ''
+        success_str = f"{success.upper()}{stat_str}"
+        print(f"{player.name} scored {player.hand.state}, {success_str}")
     dealer.games += 1
 
 

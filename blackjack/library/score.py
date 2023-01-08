@@ -5,11 +5,8 @@ See the README.md file for the rules and scoring assumptions."""
 
 __version__ = 0.40
 __author__ = 'iheteroclite'
-__all__ = ['Dealer', 'Deck', 'Player', 'cheat_choice', 'cheat_setup',
-           'check_twenty_one', 'dealer_move', 'get_screen_height',
-           'play', 'player_choice', 'round', 'score_hand', 'welcome']
+__all__ = ['score_hand', 'check_twenty_one']
 
-# Prevent circular import by importing the module here
 import src.people as people
 from library.io import player_choice
 
@@ -18,19 +15,28 @@ def score_hand(player, dealer):
     score = player.hand.state
     dealer_score = dealer.hand.state
     word = 'losses'
+    stat = ''
 
     if score not in ('bust', 'surrender'):
         # If player is not bust, and dealer busts, player wins
         if dealer_score == 'bust':
-            word = 'blackjack_wins' if score == 'blackjack' else 'even_wins'
+            if score == 'blackjack':
+                word = 'blackjack_wins'
+                stat = player.probabilities[-1]['probability']
+            else:
+                word = 'even_wins'
+                stat = 0.3742
+            #word = 'blackjack_wins' if score == 'blackjack' else 'even_wins'
         # Push if there's a tie
         elif score == dealer_score:
             word = 'pushes'
+            stat = 0.0952
         # BlackJack trumps all other hands
         # Dealer blackjack wins (unless player has blackjack)
         elif dealer_score != 'blackjack':
             if score == 'blackjack':
                 word = 'blackjack_wins'
+                stat = player.probabilities[-1]['probability']
             # If there's no other condition, highest score wins
             elif score > dealer_score:
                 word = 'even_wins'
@@ -40,7 +46,9 @@ def score_hand(player, dealer):
     setattr(dealer, word, getattr(dealer, word) + 1)
     player.games += 1
 
-    return 'loses' if word == 'losses' else ' '.join(word.split('_')[::-1])
+    win_str = 'loses' if word == 'losses' else ' '.join(word.split('_')[::-1])
+
+    return win_str, stat
 
 
 def check_twenty_one(player, ace_choice=False):
