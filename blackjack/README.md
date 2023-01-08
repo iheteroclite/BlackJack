@@ -111,29 +111,74 @@ Each dealer has a different chance of catching you cheating, so if you want to j
 
 ### Getting started
 
+#### Quickstart
+If you have done this before:
+- clone the repo:
+    `$ gh repo clone iheteroclite/BlackJack`
+- install requirements:
+    `$ pip3 install -r requirements.txt`
+- run the program:
+    `python3 blackjack.py`
+
+#### Detailed Setup Instructions
 - Open a terminal and check you have Python 3 installed:
     **Linux, Windows and MacOS:**
     `$ python3 --version`
     If you have Python 2 and Python 3 on the same system you will need to continue using `python3`, but you can check whether you have only Python 3 installed by:
-    `python --version`
-    If the output is **Python 3.x.x**, you only have Python 3 installed. This program requires Python 3.8.x ,
+    `$ python --version`
+    If the output is **Python 3.x.x**, you only have Python 3 installed.
+    This program requires Python 3.8.x (e.g 3.8.2) or higher.
 
+- Clone this GitHub repo
+    Get to the folder you want the repo to be cloned into using `cd` and optionally `mkdir`
+    In the folder you want the repo to be in:
+    `$ gh repo clone iheteroclite/BlackJack`
+    For this you will need the official GitHub `gh` CLI package installed on your local machine and have done some initial setup, see here for assistance:
+    https://cli.github.com/
+
+
+- (Optional) Install a virtual environment
+    - If you would only like to install the required python packages for this project in a virtual environment, rather than on your own machine, you will want to use Python's new venv package (or the virtualenv package).
+    - Install venv:
+        **Linux with apt**
+        `$ sudo apt install python3-venv`
+        **Linux with apt-get**
+        `$ sudo apt-get install python3-venv`
+        **Redhat Linux**
+        `$ yum install python3-venv`
+        **With npm**
+        `$ npm install python3-venv`
+    - Check venv is installed:
+        `$ venv --version`
+    - Create a virtual environment:
+        `$ python3 -m venv /path/to/enviroment`
+        Use the path of the directory where you have cloned the GitHub repo.
+    - Run your environment
+        From inside the project directory:
+        `$ source venv/bin/activate`
+        Here \<venv> is the name of the venv directory. It ocassionally has a different name, so to see files type:
+        `ls`
+        which is the UNIX command to list all files in a folder.
 - Install requirements:
+    `$ pip3 install -r requirements.txt`
 
 - If you have Python 3 and requirements installed:
     - Open a terminal
     - `ls` to check you are in a folder showing the file `blackjack.py`
-    - Type `python3 blackjack.py`
+    - Type
+        `$ python3 blackjack.py`
     - Play the game, have fun, and challenge yourself!
 - If that doesn't work, check your setup and download Python 3 if needed:
     - https://wiki.python.org/moin/BeginnersGuide/Download
 
 - To run the unit tests:
-    - From the same terminal window, type `python3 -m unittest discover test`.
+    - From the same terminal window, type
+        `$ python3 -m unittest discover test`.
 - To run the flake8 tests:
     - From the same terminal window, type `cd ..` to change to the parent directory
     - (Optional - Advanced) Include the flakes8 config at `/test/config.flake8` if you wish to use a standard configuration file
-    - run `flake8 --config blackjack/test/config.flake8 blackjack`
+    - run
+        `$ flake8 --config test/config.flake8 blackjack.py`
     - This will output either errors (with codes in red), and an error count, or will output `0` (which means there are no errors)
     - The config file `config.flake8` has per-file ignores, and these are commented to show reasoning
 
@@ -141,8 +186,8 @@ Each dealer has a different chance of catching you cheating, so if you want to j
 
 
 
-### Potential Extentions
 
+### Potential Extentions
 A month ago I initially envisaged this game being ported to a Django app, with authenticated users equivalent to players, and stored gameplay data in a many-to-many
 sql database (with a Django implementation of SQLLite). I had envisioned multiple players could play on the server (separate terminals), and see a Single Page Application with some beautiful animations and graphical representations of the cards.
 

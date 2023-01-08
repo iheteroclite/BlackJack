@@ -1,0 +1,11 @@
+backports.statistics==0.1.0
+Cython==0.29.33
+dl==0.1.0
+inquirer==3.1.1
+ipaddr==2.2.0
+keyring==23.13.1
+mypy_extensions==0.4.3
+numpy==1.19.5
+ordereddict==1.1
+pycodestyle==2.10.0
+typing_extensions==4.4.0
