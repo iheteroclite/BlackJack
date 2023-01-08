@@ -17,6 +17,11 @@ For examples and use-cases please see the blackjack project README.md
 
 __version__ = 0.40
 __author__ = 'iheteroclite'
+__all__ = ['binomial', 'chance_at_least_mean_blackjack',
+           'chance_at_least_result', 'chance_caught_with_normal_dist',
+           'chance_of_blackjack_totals', 'chance_of_single_blackjack',
+           'chance_with_fixed_percent', 'comb', 'erf', 'faces',
+           'prod', 'sqrt', 'standard_dev_fixed_percent']
 
 from math import erf, prod, comb, sqrt
 

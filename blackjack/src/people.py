@@ -11,6 +11,7 @@ catch players cheting, shout at the players and ban them from the game.
 
 __version__ = 0.40
 __author__ = 'iheteroclite'
+__all__ = []
 
 from random import randint, random
 

@@ -144,7 +144,7 @@ Each dealer has a different chance of catching you cheating, so if you want to j
 ### Potential Extentions
 
 A month ago I initially envisaged this game being ported to a Django app, with authenticated users equivalent to players, and stored gameplay data in a many-to-many
-sql database (with a Django implementation of SQLLite). I had envisioned multiple players could play on the server (separate terminals), and see a Single Page Application
+sql database (with a Django implementation of SQLLite). I had envisioned multiple players could play on the server (separate terminals), and see a Single Page Application with some beautiful animations and graphical representations of the cards.
 
 This game could be very easily extended to also catch card counting (but as I do not know how unlikely your hand has to be for a casino to suspect you of cheating, this has not yet been programmed).
 

@@ -8,11 +8,11 @@ but the chance of being caught will always increase as the statistical
 liklihood of your success rate decreases - so try not to win every game.
 """
 
-__version__ = 0.4.0
+__version__ = 0.40
 __author__ = 'iheteroclite'
-__all__ = 'Dealer', 'Deck', 'Player', 'cheat_choice', 'cheat_setup',
+__all__ = ['Dealer', 'Deck', 'Player', 'cheat_choice', 'cheat_setup',
           'check_twenty_one', 'dealer_move', 'get_screen_height',
-          'play', 'player_choice', 'round', 'score_hand', 'welcome'
+          'play', 'player_choice', 'round', 'score_hand', 'welcome']
 
 
 from src.deck import Deck

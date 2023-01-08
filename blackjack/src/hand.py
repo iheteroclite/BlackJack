@@ -3,6 +3,7 @@
 
 __version__ = 0.40
 __author__ = 'iheteroclite'
+__all__ = []
 
 from library.io import card_string
 
