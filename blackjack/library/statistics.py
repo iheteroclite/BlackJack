@@ -15,7 +15,7 @@ For examples and use-cases please see the blackjack project README.md
 
 """
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = ['binomial', 'chance_at_least_mean_blackjack',
            'chance_at_least_result', 'chance_caught_with_normal_dist',

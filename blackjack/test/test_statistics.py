@@ -1,4 +1,4 @@
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 
 import unittest
@@ -79,7 +79,6 @@ class StatisticsTestCase(unittest.TestCase):
         chance = chance_at_least_mean_blackjack(results)
         self.assertEqual(chance, 1)
 
-    # TODO: don't know whether this test works!
     def test_chance_at_least_mean_blackjack_half(self):
         bjs = [True, False] * 5
         probs = [1, 0] * 5

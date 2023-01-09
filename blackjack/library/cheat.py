@@ -2,7 +2,7 @@
 
 Some cheat methods are available seaparately in src.people."""
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = ['cheat_setup, select_dealer, cheat_choice, card_in_deck']
 

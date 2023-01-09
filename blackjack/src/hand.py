@@ -1,7 +1,7 @@
 """Class for the hand of player and the dealer in the game of blackjack.
 """
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = []
 

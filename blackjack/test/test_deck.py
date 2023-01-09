@@ -3,7 +3,7 @@
 To run cli tests: $ python3 -m unittest discover test
 """
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 
 import unittest
@@ -63,7 +63,6 @@ class DeckTestCase(unittest.TestCase):
                          [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10] * 4)
 
     def test_card_ace_value_one_or_eleven(self):
-        # TODO: make this use subTest
         aces = [Card(suits[1], faces[0])]
         aces.append(Card(suits[1], faces[0], 1))
         aces.append(Card(suits[1], faces[0], 11))

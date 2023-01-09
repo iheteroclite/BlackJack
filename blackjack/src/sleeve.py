@@ -7,7 +7,7 @@ sleeve, then swap them with cards later in the game. The cards that the player
 used are now marked.
 """
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = []
 

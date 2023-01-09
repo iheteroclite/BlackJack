@@ -4,7 +4,7 @@ This is made specifically for the game of blackjack, where aces can be
 worth 1 or 11.
 """
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = []
 

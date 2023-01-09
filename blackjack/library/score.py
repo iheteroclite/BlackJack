@@ -3,7 +3,7 @@
 
 See the README.md file for the rules and scoring assumptions."""
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = ['score_hand', 'check_twenty_one']
 

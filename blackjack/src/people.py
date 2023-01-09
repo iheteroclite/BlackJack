@@ -9,7 +9,7 @@ these could be selectable at the beginning of game. The dealer can try to
 catch players cheting, shout at the players and ban them from the game.
 """
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = []
 
@@ -123,8 +123,6 @@ class Player(People):
 
     def calculate_probability(self):
         # Probability of getting exactly this many bj/win in rounds so far
-        # TODO: chance this round
-        # self.chance_bj = 1 - self.probabilities[-1]['probability']
         self.chance_bj = chance_of_blackjack_totals(self.probabilities)
         self.chance_even = chance_with_fixed_percent(self.even_wins,
                                                      self.rounds)
@@ -201,7 +199,6 @@ class Dealer(People):
             caught_msg = "You're so suspicious, getting so many blackjacks."
         else:
             # If card has already been played, it is not in deck (duplicate)
-            # TODO: write a test case for this
             for card in player.hand.cards:
                 if card.cheat_card and not card_in_deck(card, deck):
                     if self.check_caught(prob_caught_card_coef):
@@ -213,7 +210,6 @@ class Dealer(People):
             self.ban(player, players, banned_players)
 
     def check_caught_blackjack(self, player):
-        # TODO: player already calculates this
         chance = chance_at_least_mean_blackjack(player.probabilities)
         return self.check_caught(1 - chance)
 

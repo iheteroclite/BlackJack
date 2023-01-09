@@ -3,7 +3,7 @@
 To run cli tests: $ python3 -m unittest discover test
 """
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 
 import unittest

@@ -2,7 +2,7 @@
 
 To run cli tests: $ python3 -m unittest discover test
 """
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 
 import unittest
@@ -22,8 +22,6 @@ class ProbabilitiesTestCase(unittest.TestCase):
         pass
 
     def test_probabilities_update_after_blackjack(self):
-        # TODO: remove repitition
-
         self.player.hand.cards = [Card('♣', 'Ace', 9),
                                   Card('♣', 10),
                                   Card('♣', 2)]

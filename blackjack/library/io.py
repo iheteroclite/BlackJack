@@ -1,6 +1,6 @@
 """This library provides various input and output functions for blackjack."""
 
-__version__ = 0.40
+__version__ = 1.00
 __author__ = 'iheteroclite'
 __all__ = ['bottom', 'card_string', 'get_screen_height', 'get_terminal_size',
            'inquirer', 'pads', 'pads_top', 'player_choice',
