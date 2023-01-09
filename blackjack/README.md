@@ -1,13 +1,13 @@
 ## Blackjack - CLI (with a twist)!
 
  ____________  ____________
-`/            \/            \
+/            \/            \
 |    Ace     ||    Jack    |
 |            ||            |
 |  ♣     ♣   ||  ♦     ♦   |
 |            ||            |
 |     ♣      ||     ♦      |
-\____________/\____________/`
+\____________/\____________/
 
 
 Do you want to try your hand at beating the odds in blackjack? Or simulating your chances of getting caught cheating with a sleight of hand? This is the game for you!
@@ -182,9 +182,8 @@ If you have done this before:
     - This will output either errors (with codes in red), and an error count, or will output `0` (which means there are no errors)
     - The config file `config.flake8` has per-file ignores, and these are commented to show reasoning
 
-
-
-
+### Test Documentation
+- Full test documentation list with justification for the test cases is available in the Documentation folder.
 
 
 ### Potential Extentions
